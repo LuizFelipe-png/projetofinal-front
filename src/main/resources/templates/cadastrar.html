@@ -1,51 +1,72 @@
 <!DOCTYPE html>
-<!--
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
--->
-<html>
-    <head>
-        <title>Cadastrar</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <div class="card shadow-sm" style="max-width: 400px; width: 100%;">
-            <div class="card-body p-4">
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
 
-                <h2 class="card-title text-center mb-4 text-primary">Entrar</h2>
-
-                <form action="/cadastrar" method="POST">
-                    <div class="mb-3">
-                        <label for="nome" class="form-label">Nome</label>
-                        <input type="text" id="nome" name="nome" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Usuário</label>
-                        <input type="text" id="usuario" name="usuario" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">E-mail</label>
-                        <input type="email" id="email" name="email" class="form-control" placeholder="nome@gmail.com" required>
-                    </div>
-                    <div class="mb-4">
-                        <label for="senha" class="form-label">Senha</label>
-                        <input type="password" id="senha" name="senha" class="form-control" placeholder="Sua senha" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100 py-2">
-                        Acessar Conta
-                    </button>
-
-                </form>
-                <div class="text-center mt-4">
-                    <p class="mb-1">
-                        Já tem login?
-                    </p>
-
-                    <a th:href="@{/login}">
-                        Logar
-                    </a>
-                </div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">🎓 Sistema TCC</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Cadastros</a>
+                    </li>
+                </ul>
             </div>
-    </body>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                
+                <div class="card shadow-sm border-0 rounded-3">
+                    <div class="card-header bg-primary text-white py-3">
+                        <h5 class="card-title mb-0 fw-semibold">Gerenciamento do Projeto</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <p class="text-secondary">Utilize o formulário abaixo para registrar os dados no banco de dados.</p>
+                        
+                        <form th:action="@{/salvar}" method="POST" class="needs-validation">
+                            <div class="mb-3">
+                                <label for="nome" class="form-label fw-medium">Nome do Registro</label>
+                                <input type="text" class="form-control form-control-lg" id="nome" name="nome" placeholder="Digite aqui..." required>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="descricao" class="form-label fw-medium">Descrição</label>
+                                <textarea class="form-control" id="descricao" name="descricao" rows="3" placeholder="Detalhes do registro..."></textarea>
+                            </div>
+                            
+                            <div class="d-flex justify-content-end gap-2">
+                                <button type="reset" class="btn btn-outline-secondary px-4">Limpar</button>
+                                <button type="submit" class="btn btn-primary px-4 fw-medium shadow-sm">Salvar Dados</button>
+                            </div>
+                        </form>
+                        
+                    </div>
+                </div>
+
+                <div class="text-center text-muted mt-4 small">
+                    <p>Status do Back-end: <span class="badge bg-success">Online (Porta 9000)</span></p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

@@ -37,7 +37,7 @@ public class AuthService {
         String retorno = 
             restClient
                 .post()
-                .uri("/auth/registrar")
+                .uri("/auth/cadastrar")
                 .body(user)
                 .retrieve()
                 .body(String.class);
