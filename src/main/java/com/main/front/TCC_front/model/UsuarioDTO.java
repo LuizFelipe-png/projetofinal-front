@@ -9,21 +9,23 @@ package com.main.front.TCC_front.model;
  * @author Win
  */
 public class UsuarioDTO {
-    
+
     private Long id;
-    private String usuario;
+    private String nome_usuario;
     private String nome;
     private String email;
+    private String telefone;
     private String senha;
 
     public UsuarioDTO() {
     }
 
-    public UsuarioDTO(Long id, String usuario, String nome, String email, String senha) {
+    public UsuarioDTO(Long id, String nome_usuario, String nome, String email, String telefone, String senha) {
         this.id = id;
-        this.usuario = usuario;
+        this.nome_usuario = nome_usuario;
         this.nome = nome;
         this.email = email;
+        this.telefone = telefone;
         this.senha = senha;
     }
 
@@ -35,12 +37,12 @@ public class UsuarioDTO {
         this.id = id;
     }
 
-    public String getUsuario() {
-        return usuario;
+    public String getNome_usuario() {
+        return nome_usuario;
     }
 
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
+    public void setNome_usuario(String nome_usuario) {
+        this.nome_usuario = nome_usuario;
     }
 
     public String getNome() {
@@ -59,6 +61,14 @@ public class UsuarioDTO {
         this.email = email;
     }
 
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
     public String getSenha() {
         return senha;
     }
@@ -66,6 +76,6 @@ public class UsuarioDTO {
     public void setSenha(String senha) {
         this.senha = senha;
     }
- 
+
     
 }

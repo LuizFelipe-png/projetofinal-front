@@ -20,6 +20,11 @@ public class AuthController {
     @Autowired 
     private AuthService authService;
     
+    @GetMapping("/home")
+    public String home() {
+        return "home"; 
+    }
+    
     @GetMapping("/login") 
     public String login(Model model){
         UsuarioRequestDTO credenciais = new UsuarioRequestDTO();
@@ -30,9 +35,10 @@ public class AuthController {
     @PostMapping("/logar")
     public String logar(@ModelAttribute UsuarioRequestDTO credenciais, HttpSession session){
         String token = authService.logar(credenciais);
-        System.out.println("token: "+token);
+        System.out.println("token: " + token);
         session.setAttribute("token", token);
-        return "redirect:/";
+        
+        return "redirect:/home";
     }
     
     @GetMapping("/cadastrar")

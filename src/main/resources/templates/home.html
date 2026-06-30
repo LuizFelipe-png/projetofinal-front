@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SportsTrace - Rastreamento Logístico 2FA</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    </head>
+    <body class="bg-light min-vh-100 d-flex flex-column">
+
+        <!-- BARRA DE NAVEGAÇÃO SUPERIOR -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+            <div class="container">
+                <a class="navbar-brand fw-bold" href="#">
+                    <i class="bi bi-shield-check text-primary me-2"></i>SportsTrace
+                </a>
+                <span class="navbar-text text-white-50 d-none d-md-inline small">
+                    Sistema Web Logístico com Autenticação de Entrega em Duas Etapas (2FA)
+                </span>
+            </div>
+        </nav>
+
+        <!-- CONTEÚDO PRINCIPAL -->
+        <main class="container my-5 flex-grow-1">
+            
+            <!-- BLOCÃO DE BOAS-VINDAS E RASTREAMENTO PÚBLICO -->
+            <div class="row justify-content-center mb-5">
+                <div class="col-lg-8 text-center">
+                    <span class="badge bg-primary-subtle text-primary mb-3 px-3 py-2 rounded-pill fw-semibold text-uppercase">Consulta Pública End-to-End</span>
+                    <h1 class="display-6 fw-bold text-dark mb-3">Rastreabilidade de Lotes Esportivos</h1>
+                    <p class="text-secondary mb-4">
+                        Acompanhe o ciclo de vida da sua encomenda industrial (de "Em Separação" até a "Última Milha") em tempo real, sem necessidade de login.
+                    </p>
+
+                    <!-- Formulário de Rastreio Público -->
+                    <div class="card shadow border-0 p-4 rounded-4 bg-white text-start">
+                        <form th:action="@{/rastrear}" method="GET" class="row g-3">
+                            <div class="col-md-9">
+                                <label class="form-label text-dark fw-medium small text-secondary">Código de Rastreamento Único</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-secondary border-end-0">
+                                        <i class="bi bi-search"></i>
+                                    </span>
+                                    <input type="text" name="codigoLote" class="form-control bg-light border-start-0" 
+                                           placeholder="Insira o código identificador (Ex: LOTE-EXP-1234)" required>
+                                </div>
+                            </div>
+                            <div class="col-md-3 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary w-100 fw-medium shadow-sm py-2">
+                                    Consultar Status
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MÓDULOS DE ACESSO RESTRITO (3 TIPOS DE LOGIN) -->
+            <div class="row g-4 mb-5 justify-content-center">
+                <div class="col-12 text-center mb-2">
+                    <h3 class="fw-bold text-dark mb-1">Módulos de Acesso Restrito</h3>
+                    <p class="text-secondary small">Painéis sistêmicos protegidos por credenciais de autenticação</p>
+                </div>
+
+                <!-- 1. Operador Logístico -->
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm border-0 text-center rounded-3 p-2">
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <div>
+                                <div class="bg-primary-subtle text-primary rounded-3 mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                    <i class="bi bi-building-gear fs-4"></i>
+                                </div>
+                                <h5 class="card-title fw-bold">Operador Logístico</h5>
+                                <p class="card-text text-secondary small">Criação de remessas, gestão do estoque industrial, check-in em hubs e acionamento do plano de contingência de frotas.</p>
+                            </div>
+                            <a th:href="@{/login}" class="btn btn-outline-primary btn-sm mt-3 w-100 fw-medium">Acessar Indústria</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Entregador -->
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm border-0 text-center rounded-3 p-2">
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <div>
+                                <div class="bg-success-subtle text-success rounded-3 mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                    <i class="bi bi-person-badge fs-4"></i>
+                                </div>
+                                <h5 class="card-title fw-bold">Entregador (Last Mile)</h5>
+                                <p class="card-text text-secondary small">Autenticação do operador de rota, visualização do itinerário de despacho e inserção obrigatória do Token/2FA recebido pelo cliente.</p>
+                            </div>
+                            <a th:href="@{/login}" class="btn btn-outline-success btn-sm mt-3 w-100 fw-medium">Área de Entrega</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Cliente -->
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm border-0 text-center rounded-3 p-2">
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <div>
+                                <div class="bg-info-subtle text-info rounded-3 mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                    <i class="bi bi-shop fs-4"></i>
+                                </div>
+                                <h5 class="card-title fw-bold">Lojas e Clubes</h5>
+                                <p class="card-text text-secondary small">Emissão assistida de pedidos de artigos esportivos, simulação algorítmica de frete/distância e monitoramento de ordens de compra.</p>
+                            </div>
+                            <a th:href="@{/login}" class="btn btn-outline-info btn-sm mt-3 w-100 fw-medium">Área do Cliente</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DIFERENCIAIS DE SEGURANÇA E PROTOCOLOS DE FROTAS -->
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="card shadow-sm border-0 rounded-4 p-3 bg-white">
+                        <div class="card-body">
+                            <h5 class="fw-bold text-dark mb-4 border-bottom pb-2">
+                                <i class="bi bi-shield-lock-fill text-primary me-2"></i>Camada de Segurança e Protocolos Industriais do Sistema
+                            </h5>
+                            
+                            <div class="row g-4">
+                                <!-- Validação 2FA -->
+                                <div class="col-md-4">
+                                    <div class="d-flex flex-column">
+                                        <div class="text-primary mb-2"><i class="bi bi-envelope-check-fill fs-4"></i></div>
+                                        <h6 class="fw-bold mb-1">Validação Assíncrona 2FA</h6>
+                                        <p class="text-secondary small mb-0">Quando o status avança para "Em Rota", a mensageria envia um Token/OTP criptografado de 6 dígitos ao cliente. A baixa sistêmica exige a validação desse código.</p>
+                                    </div>
+                                </div>
+                                <!-- Contingência de Frotas -->
+                                <div class="col-md-4">
+                                    <div class="d-flex flex-column">
+                                        <div class="text-warning mb-2"><i class="bi bi-truck-flatbed fs-4"></i></div>
+                                        <h6 class="fw-bold mb-1">Contingência de Frotas</h6>
+                                        <p class="text-secondary small mb-0">Em caso de avarias mecânicas com o caminhão transportador, o sistema executa o disparo automático para transbordo imediato da carga para uma nova frota operacional.</p>
+                                    </div>
+                                </div>
+                                <!-- Reposição Automatizada -->
+                                <div class="col-md-4">
+                                    <div class="d-flex flex-column">
+                                        <div class="text-danger mb-2"><i class="bi bi-arrow-counterclockwise fs-4"></i></div>
+                                        <h6 class="fw-bold mb-1">Reposição Industrial</h6>
+                                        <p class="text-secondary small mb-0">Constatada qualquer falha ou avaria nos materiais esportivos durante o fluxo, a fábrica é notificada para disparar a produção prioritária de uma nova remessa.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- RODAPÉ DA APLICAÇÃO -->
+        <footer class="bg-dark text-white-50 text-center py-3 mt-auto border-top border-secondary">
+            <div class="container small">
+                <strong>SportsTrace</strong> &copy; 2026 - Trabalho de Conclusão de Curso (TCC). Desenvolvido por Luiz Felipe Costa Silva Murarolli.
+            </div>
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>
