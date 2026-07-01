@@ -9,7 +9,6 @@
     </head>
     <body class="bg-light min-vh-100 d-flex flex-column">
 
-        <!-- BARRA DE NAVEGAÇÃO SUPERIOR -->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
             <div class="container">
                 <a class="navbar-brand fw-bold" href="#">
@@ -21,10 +20,8 @@
             </div>
         </nav>
 
-        <!-- CONTEÚDO PRINCIPAL -->
         <main class="container my-5 flex-grow-1">
             
-            <!-- BLOCÃO DE BOAS-VINDAS E RASTREAMENTO PÚBLICO -->
             <div class="row justify-content-center mb-5">
                 <div class="col-lg-8 text-center">
                     <span class="badge bg-primary-subtle text-primary mb-3 px-3 py-2 rounded-pill fw-semibold text-uppercase">Consulta Pública End-to-End</span>
@@ -33,7 +30,6 @@
                         Acompanhe o ciclo de vida da sua encomenda industrial (de "Em Separação" até a "Última Milha") em tempo real, sem necessidade de login.
                     </p>
 
-                    <!-- Formulário de Rastreio Público -->
                     <div class="card shadow border-0 p-4 rounded-4 bg-white text-start">
                         <form th:action="@{/rastrear}" method="GET" class="row g-3">
                             <div class="col-md-9">
@@ -56,14 +52,12 @@
                 </div>
             </div>
 
-            <!-- MÓDULOS DE ACESSO RESTRITO (3 TIPOS DE LOGIN) -->
             <div class="row g-4 mb-5 justify-content-center">
                 <div class="col-12 text-center mb-2">
                     <h3 class="fw-bold text-dark mb-1">Módulos de Acesso Restrito</h3>
                     <p class="text-secondary small">Painéis sistêmicos protegidos por credenciais de autenticação</p>
                 </div>
 
-                <!-- 1. Operador Logístico -->
                 <div class="col-md-4">
                     <div class="card h-100 shadow-sm border-0 text-center rounded-3 p-2">
                         <div class="card-body d-flex flex-column justify-content-between">
@@ -79,7 +73,6 @@
                     </div>
                 </div>
 
-                <!-- 2. Entregador -->
                 <div class="col-md-4">
                     <div class="card h-100 shadow-sm border-0 text-center rounded-3 p-2">
                         <div class="card-body d-flex flex-column justify-content-between">
@@ -95,7 +88,6 @@
                     </div>
                 </div>
 
-                <!-- 3. Cliente -->
                 <div class="col-md-4">
                     <div class="card h-100 shadow-sm border-0 text-center rounded-3 p-2">
                         <div class="card-body d-flex flex-column justify-content-between">
@@ -112,7 +104,6 @@
                 </div>
             </div>
 
-            <!-- DIFERENCIAIS DE SEGURANÇA E PROTOCOLOS DE FROTAS -->
             <div class="row justify-content-center">
                 <div class="col-lg-10">
                     <div class="card shadow-sm border-0 rounded-4 p-3 bg-white">
@@ -122,7 +113,6 @@
                             </h5>
                             
                             <div class="row g-4">
-                                <!-- Validação 2FA -->
                                 <div class="col-md-4">
                                     <div class="d-flex flex-column">
                                         <div class="text-primary mb-2"><i class="bi bi-envelope-check-fill fs-4"></i></div>
@@ -130,7 +120,6 @@
                                         <p class="text-secondary small mb-0">Quando o status avança para "Em Rota", a mensageria envia um Token/OTP criptografado de 6 dígitos ao cliente. A baixa sistêmica exige a validação desse código.</p>
                                     </div>
                                 </div>
-                                <!-- Contingência de Frotas -->
                                 <div class="col-md-4">
                                     <div class="d-flex flex-column">
                                         <div class="text-warning mb-2"><i class="bi bi-truck-flatbed fs-4"></i></div>
@@ -138,7 +127,6 @@
                                         <p class="text-secondary small mb-0">Em caso de avarias mecânicas com o caminhão transportador, o sistema executa o disparo automático para transbordo imediato da carga para uma nova frota operacional.</p>
                                     </div>
                                 </div>
-                                <!-- Reposição Automatizada -->
                                 <div class="col-md-4">
                                     <div class="d-flex flex-column">
                                         <div class="text-danger mb-2"><i class="bi bi-arrow-counterclockwise fs-4"></i></div>
@@ -154,7 +142,6 @@
 
         </main>
 
-        <!-- RODAPÉ DA APLICAÇÃO -->
         <footer class="bg-dark text-white-50 text-center py-3 mt-auto border-top border-secondary">
             <div class="container small">
                 <strong>SportsTrace</strong> &copy; 2026 - Trabalho de Conclusão de Curso (TCC). Desenvolvido por Luiz Felipe Costa Silva Murarolli.

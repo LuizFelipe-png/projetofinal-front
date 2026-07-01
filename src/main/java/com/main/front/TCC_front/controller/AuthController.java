@@ -33,14 +33,30 @@ public class AuthController {
     }
     
     @PostMapping("/logar")
-    public String logar(@ModelAttribute UsuarioRequestDTO credenciais, HttpSession session){
-        String token = authService.logar(credenciais);
-        System.out.println("token: " + token);
-        session.setAttribute("token", token);
-        
-        return "redirect:/home";
+    public String logar(@ModelAttribute UsuarioRequestDTO credenciais, HttpSession session, RedirectAttributes redirectAttributes){
+        try {
+            String token = authService.logar(credenciais);
+            System.out.println("token: " + token);
+            
+            session.setAttribute("token", token);
+            return "redirect:/home";
+            
+        } catch (HttpStatusCodeException ex) {
+            try {
+                String mensagemErroDoBackend = new ObjectMapper()
+                        .readTree(ex.getResponseBodyAsString())
+                        .get("message").asText(); 
+                redirectAttributes.addFlashAttribute("erroServidor", mensagemErroDoBackend);
+            } catch (Exception e) {
+                redirectAttributes.addFlashAttribute("erroServidor", "Usuário ou senha inválidos.");
+            }
+            return "redirect:/login"; 
+            
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("erroServidor", "Não foi possível conectar ao servidor de autenticação.");
+            return "redirect:/login"; 
+        }
     }
-    
     @GetMapping("/cadastrar")
     public String registrar(Model model){
         UsuarioDTO newUser = new UsuarioDTO();
