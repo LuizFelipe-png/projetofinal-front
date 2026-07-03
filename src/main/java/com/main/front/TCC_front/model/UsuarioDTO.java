@@ -16,17 +16,19 @@ public class UsuarioDTO {
     private String email;
     private String telefone;
     private String senha;
+    private String role;
 
     public UsuarioDTO() {
     }
 
-    public UsuarioDTO(Long id, String nome_usuario, String nome, String email, String telefone, String senha) {
+    public UsuarioDTO(Long id, String nome_usuario, String nome, String email, String telefone, String senha, String role) {
         this.id = id;
         this.nome_usuario = nome_usuario;
         this.nome = nome;
         this.email = email;
         this.telefone = telefone;
         this.senha = senha;
+        this.role = role;
     }
 
     public Long getId() {
@@ -75,6 +77,14 @@ public class UsuarioDTO {
 
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     

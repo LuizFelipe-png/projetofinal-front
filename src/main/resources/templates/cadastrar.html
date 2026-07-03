@@ -51,17 +51,30 @@
                                     <input type="password" class="form-control" id="senha" th:field="*{senha}" placeholder="Sua senha" required>
                                 </div>
 
+                                <div class="dropdown-center mb-3">
+                                    <button class="btn dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: #ffffff; color: #495057; border-color: #ced4da;">
+                                        <span id="texto-cargo">Cargo:</span>
+                                    </button>
+
+                                    <ul class="dropdown-menu w-100">
+                                        <li><a class="dropdown-item" href="#" onclick="document.getElementById('texto-cargo').innerText = 'Cliente'; document.getElementById('role-input').value = 'Cliente';">Cliente</a></li>
+                                        <li><a class="dropdown-item" href="#" onclick="document.getElementById('texto-cargo').innerText = 'Entregador'; document.getElementById('role-input').value = 'Entregador';">Entregador</a></li>
+                                    </ul>
+
+                                    <input type="hidden" id="role-input" name="role" value="">
+                                </div>
+
                                 <div class="d-grid gap-2">
                                     <button type="submit" class="btn btn-primary py-2 fw-medium shadow-sm">Cadastrar</button>   
                                 </div>
 
                             </form>
                             <div class="text-center mt-4">
-                        <p class="mb-1 text-secondary small">Já tem login?</p>
-                        <a th:href="@{/login}" class="text-primary fw-medium text-decoration-none small">
-                            Faça login
-                        </a>
-                    </div>
+                                <p class="mb-1 text-secondary small">Já tem login?</p>
+                                <a th:href="@{/login}" class="text-primary fw-medium text-decoration-none small">
+                                    Faça login
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
