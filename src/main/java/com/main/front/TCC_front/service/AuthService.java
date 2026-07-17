@@ -2,6 +2,7 @@ package com.main.front.TCC_front.service;
 
 import com.main.front.TCC_front.model.UsuarioDTO;
 import com.main.front.TCC_front.model.UsuarioRequestDTO;
+import com.main.front.TCC_front.model.UsuarioResponseDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -16,12 +17,12 @@ public class AuthService {
                 .build();
     }
 
-    public String logar(UsuarioRequestDTO user) {
+    public UsuarioResponseDTO logar(UsuarioRequestDTO user) {
         return restClient.post()
                 .uri("/auth/logar")
                 .body(user)
                 .retrieve()
-                .body(String.class);
+                .body(UsuarioResponseDTO.class);
     }
     
     public void registrar(UsuarioDTO user) {

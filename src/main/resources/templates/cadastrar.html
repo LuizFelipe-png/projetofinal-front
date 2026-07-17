@@ -32,11 +32,6 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="nomeUsuario" class="form-label fw-medium">Nome de Usuário</label>
-                                    <input type="text" class="form-control" id="nomeUsuario" th:field="*{nome_usuario}" placeholder="Seu nome de usuário" required>
-                                </div>
-
-                                <div class="mb-3">
                                     <label for="telefone" class="form-label fw-medium">Telefone</label>
                                     <input type="tel" class="form-control" id="telefone" th:field="*{telefone}" placeholder="(11) 99999-9999" required>
                                 </div>
@@ -57,9 +52,11 @@
                                     </button>
 
                                     <ul class="dropdown-menu w-100">
-                                        <li><a class="dropdown-item" href="#" onclick="document.getElementById('texto-cargo').innerText = 'Cliente'; document.getElementById('role-input').value = 'Cliente';">Cliente</a></li>
                                         <li><a class="dropdown-item" href="#" onclick="document.getElementById('texto-cargo').innerText = 'Entregador'; document.getElementById('role-input').value = 'Entregador';">Entregador</a></li>
+                                        <li><a class="dropdown-item" href="#" onclick="document.getElementById('texto-cargo').innerText = 'Operador Logistico'; document.getElementById('role-input').value = 'Operador Logistico';">Operador Logistico</a></li>
                                     </ul>
+                                    
+                                    
 
                                     <input type="hidden" id="role-input" name="role" value="">
                                 </div>

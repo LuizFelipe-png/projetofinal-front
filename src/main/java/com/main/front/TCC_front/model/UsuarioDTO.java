@@ -11,7 +11,6 @@ package com.main.front.TCC_front.model;
 public class UsuarioDTO {
 
     private Long id;
-    private String nome_usuario;
     private String nome;
     private String email;
     private String telefone;
@@ -23,7 +22,6 @@ public class UsuarioDTO {
 
     public UsuarioDTO(Long id, String nome_usuario, String nome, String email, String telefone, String senha, String role) {
         this.id = id;
-        this.nome_usuario = nome_usuario;
         this.nome = nome;
         this.email = email;
         this.telefone = telefone;
@@ -37,14 +35,6 @@ public class UsuarioDTO {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getNome_usuario() {
-        return nome_usuario;
-    }
-
-    public void setNome_usuario(String nome_usuario) {
-        this.nome_usuario = nome_usuario;
     }
 
     public String getNome() {
