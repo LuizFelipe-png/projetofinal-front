@@ -102,28 +102,28 @@ public class AuthController {
     @GetMapping("/entregador")
     public String paginaEntregador(HttpSession session) {
         String token = (String) session.getAttribute("token");
-        if(token == null){
-             return "redirect:/login";
-        }
+        //if(token == null){
+          //   return "redirect:/login";
+        //}
         return "entregador";
     }
 
     @GetMapping("/industria")
     public String paginaOperador(Model model, HttpSession session) {
-        String token = (String) session.getAttribute("token");
-        if(token == null){
-             return "redirect:/login";
-        }
-        model.addAttribute("lotes", operadorService.listarPedidos(token));
-        return "sucesso!";
+        //String token = (String) session.getAttribute("token");
+        //if(token == null){
+             //return "redirect:/login";
+        //}
+        //model.addAttribute("lotes", operadorService.listarPedidos(token));
+        return "industria";
     }
 
     @GetMapping("/novo-lote")
     public String novoLote(Model model, HttpSession session) {
         String token = (String) session.getAttribute("token");
-        if(token == null){
-             return "redirect:/login";
-        }
+        //if(token == null){
+          //   return "redirect:/login";
+        //}
         model.addAttribute("operador", new OperadorDTO());
         return "novo_lote";
     }
@@ -131,16 +131,31 @@ public class AuthController {
     @PostMapping("/novo-lote")
     public String cadastrarLote(@ModelAttribute OperadorDTO operador, HttpSession session, RedirectAttributes redirectAttributes) {
         String token = (String) session.getAttribute("token");
-        if(token == null){
-             return "redirect:/login";
-        }
+        //if(token == null){
+          //   return "redirect:/login";
+        //}
         operadorService.cadastrarLote(token, operador);
         redirectAttributes.addFlashAttribute("mensagemSucesso", "Lote cadastrado com sucesso!");
-        return "redirect:/industria";
+        return "industria";
     }
     
     @GetMapping("/")
     public String telaCliente(){
         return "cliente";
+    }
+    
+    @GetMapping("/rastreamento")
+    public String telaRastreamento(){
+        return "rastreamento";
+    }
+    
+    @GetMapping("/notificacoes")
+    public String telaNotificacoes(){
+        return "notificacoes";
+    }
+    
+    @GetMapping("/incidentes")
+    public String telaIncidentes(){
+        return "incidentes";
     }
 }

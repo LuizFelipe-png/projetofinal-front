@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
     <head>
@@ -18,7 +20,7 @@
                         <span th:text="${mensagemSucesso}"></span>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-                    
+
                     <div class="card shadow-sm border-0 rounded-3">
                         <div class="card-header bg-primary text-white py-3 text-center">
                             <h5 class="card-title mb-0 fw-semibold">Login</h5>
@@ -27,12 +29,11 @@
                             <p class="text-secondary text-center small mb-4">Insira suas credenciais para acessar o painel</p>
                             
                             <form th:action="@{/logar}" th:object="${credenciais}" method="POST" class="needs-validation">
-                            
+
                                 <div class="mb-3">
                                     <label for="email" class="form-label fw-medium">Email</label>
                                     <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="Seu e-mail" required autofocus>
                                 </div>
-                            
                                 <div class="mb-4">
                                     <label for="senha" class="form-label fw-medium">Senha</label>
                                     <input type="password" class="form-control" id="senha" th:field="*{senha}" placeholder="Sua senha" required>
