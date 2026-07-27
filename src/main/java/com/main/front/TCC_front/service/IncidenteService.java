@@ -4,41 +4,40 @@
  */
 package com.main.front.TCC_front.service;
 
-import com.main.front.TCC_front.model.OperadorDTO;
+import com.main.front.TCC_front.model.IncidentesDTO;
+import java.util.List;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
-
-import java.util.List;
 
 /**
  *
  * @author Win
  */
 @Service
-public class OperadorService {
+public class IncidenteService {
 
     private final RestClient restClient;
 
-    public OperadorService() {
+    public IncidenteService() {
         this.restClient = RestClient.builder()
                 .baseUrl("http://localhost:9000")
                 .build();
     }
 
-    public List<OperadorDTO> listarPedidos(String token) {
-    return restClient.get()
-            .uri("/industria/listar")
-            .header("Authorization", "Bearer " + token)
-            .retrieve()
-            .body(new ParameterizedTypeReference<List<OperadorDTO>>() {});
-}
-
-    public void cadastrarLote(String token, OperadorDTO operador) {
-        restClient.post()
-                .uri("/industria/pedidos")
+    public List<IncidentesDTO> listarIncidentes(String token) {
+        return restClient.get()
+                .uri("/industria/incidentes")
                 .header("Authorization", "Bearer " + token)
-                .body(operador)
+                .retrieve()
+                .body(new ParameterizedTypeReference<List<IncidentesDTO>>() {});
+    }
+
+    public void cadastrarIncidente(String token, IncidentesDTO incidente) {
+        restClient.post()
+                .uri("/industria/incidentes")
+                .header("Authorization", "Bearer " + token)
+                .body(incidente)
                 .retrieve()
                 .toBodilessEntity();
     }

@@ -1,10 +1,12 @@
 package com.main.front.TCC_front.controller;
 
+import com.main.front.TCC_front.model.IncidentesDTO;
 import com.main.front.TCC_front.model.OperadorDTO;
 import com.main.front.TCC_front.model.UsuarioDTO;
 import com.main.front.TCC_front.model.UsuarioRequestDTO;
 import com.main.front.TCC_front.model.UsuarioResponseDTO;
 import com.main.front.TCC_front.service.AuthService;
+import com.main.front.TCC_front.service.IncidenteService;
 import com.main.front.TCC_front.service.OperadorService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +24,12 @@ public class AuthController {
 
     @Autowired
     private AuthService authService;
-    
+
     @Autowired
     private OperadorService operadorService;
+
+    @Autowired
+    private IncidenteService incidenteService;
 
     @GetMapping("/login")
     public String login(Model model) {
@@ -103,18 +108,18 @@ public class AuthController {
     public String paginaEntregador(HttpSession session) {
         String token = (String) session.getAttribute("token");
         //if(token == null){
-          //   return "redirect:/login";
+        //   return "redirect:/login";
         //}
         return "entregador";
     }
 
     @GetMapping("/industria")
     public String paginaOperador(Model model, HttpSession session) {
-        //String token = (String) session.getAttribute("token");
+        String token = (String) session.getAttribute("token");
         //if(token == null){
-             //return "redirect:/login";
+        //   return "redirect:/login";
         //}
-        //model.addAttribute("lotes", operadorService.listarPedidos(token));
+        model.addAttribute("lotes", operadorService.listarPedidos(token));
         return "industria";
     }
 
@@ -122,7 +127,7 @@ public class AuthController {
     public String novoLote(Model model, HttpSession session) {
         String token = (String) session.getAttribute("token");
         //if(token == null){
-          //   return "redirect:/login";
+        //   return "redirect:/login";
         //}
         model.addAttribute("operador", new OperadorDTO());
         return "novo_lote";
@@ -132,30 +137,42 @@ public class AuthController {
     public String cadastrarLote(@ModelAttribute OperadorDTO operador, HttpSession session, RedirectAttributes redirectAttributes) {
         String token = (String) session.getAttribute("token");
         //if(token == null){
-          //   return "redirect:/login";
+        //   return "redirect:/login";
         //}
         operadorService.cadastrarLote(token, operador);
         redirectAttributes.addFlashAttribute("mensagemSucesso", "Lote cadastrado com sucesso!");
-        return "industria";
+        return "redirect:/industria";
     }
-    
+
     @GetMapping("/")
-    public String telaCliente(){
+    public String telaCliente() {
         return "cliente";
     }
-    
+
     @GetMapping("/rastreamento")
-    public String telaRastreamento(){
+    public String telaRastreamento() {
         return "rastreamento";
     }
-    
+
     @GetMapping("/notificacoes")
-    public String telaNotificacoes(){
+    public String telaNotificacoes() {
         return "notificacoes";
     }
-    
-    @GetMapping("/incidentes")
-    public String telaIncidentes(){
+
+    @GetMapping("/industria/incidentes")
+    public String telaIncidentes(Model model, HttpSession session) {
+        String token = (String) session.getAttribute("token");
+        model.addAttribute("incidentes", incidenteService.listarIncidentes(token));
+        model.addAttribute("lotes", operadorService.listarPedidos(token));
+        model.addAttribute("incidente", new IncidentesDTO());
         return "incidentes";
+    }
+
+    @PostMapping("/industria/incidentes")
+    public String cadastrarIncidente(@ModelAttribute IncidentesDTO incidente, HttpSession session, RedirectAttributes redirectAttributes) {
+        String token = (String) session.getAttribute("token");
+        incidenteService.cadastrarIncidente(token, incidente);
+        redirectAttributes.addFlashAttribute("mensagemSucesso", "Incidente registrado com sucesso!");
+        return "redirect:/industria/incidentes";
     }
 }
