@@ -175,4 +175,10 @@ public class AuthController {
         redirectAttributes.addFlashAttribute("mensagemSucesso", "Incidente registrado com sucesso!");
         return "redirect:/industria/incidentes";
     }
+    
+    @GetMapping("/sair")
+    public String sair(HttpSession session){
+        session.invalidate();
+        return "redirect:/login";
+    }
 }

@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
     <head>
@@ -22,7 +21,7 @@
                     </div>
 
                     <div class="card shadow-sm border-0 rounded-3">
-                        <div class="card-header bg-primary text-white py-3 text-center">
+                        <div class="card-header bg-dark text-white py-3 text-center">
                             <h5 class="card-title mb-0 fw-semibold">Login</h5>
                         </div>
                         <div class="card-body p-4">
@@ -39,14 +38,14 @@
                                     <input type="password" class="form-control" id="senha" th:field="*{senha}" placeholder="Sua senha" required>
                                 </div>
                                 <div class="d-grid gap-2">
-                                    <button type="submit" class="btn btn-primary py-2 fw-medium shadow-sm">Entrar</button>   
+                                    <button type="submit" class="btn btn-dark py-2 fw-medium shadow-sm">Entrar</button>   
                                 </div>
                             </form>
                         </div>
                     </div>
                     <div class="text-center mt-4">
                         <p class="mb-1 text-secondary small">Não tem cadastro?</p>
-                        <a th:href="@{/cadastrar}" class="text-primary fw-medium text-decoration-none small">
+                        <a th:href="@{/cadastrar}" class="text-dark fw-medium text-decoration-none small">
                             Cadastre-se aqui
                         </a>
                     </div>
