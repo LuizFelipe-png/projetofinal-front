@@ -66,6 +66,9 @@
                                 </div>
 
                             </form>
+                            <div th:if="${verificacaoSenha}" class=alert alert-danger th:text="${verificacaoSenha}">
+                                
+                            </div>
                             <div class="text-center mt-4">
                                 <p class="mb-1 text-secondary small">Já tem login?</p>
                                 <a th:href="@{/login}" class="text-dark fw-medium text-decoration-none small">

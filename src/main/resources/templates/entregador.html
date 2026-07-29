@@ -26,17 +26,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 </div>
             </div>
         </nav>
-
         <div class="container mt-5 mb-5">
-
             <h2 class="mb-1">Minhas Entregas</h2>
             <p class="text-muted mb-4">Cargas atribuídas a você</p>
-
             <hr class="mb-4">
-
             <div class="card">
                 <ul class="list-group list-group-flush">
-
                     <li class="list-group-item py-3" th:each="pedido : ${pedidos}">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <div>
@@ -46,7 +41,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             </div>
                             <span class="badge bg-secondary" th:text="${pedido.status}"></span>
                         </div>
-
                         <form th:if="${pedido.status == 'Em Rota'}" th:action="@{/entregador/confirmar}" method="post" class="row g-2 align-items-center mt-2">
                             <input type="hidden" name="id_pedido" th:value="${pedido.id_pedido}">
                             <div class="col-auto">
@@ -57,15 +51,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             </div>
                         </form>
                     </li>
-
                     <li class="list-group-item text-center text-muted py-4" th:if="${#lists.isEmpty(pedidos)}">
                         Nenhuma entrega atribuída no momento
                     </li>
-
                 </ul>
             </div>
-
         </div>
-
     </body>
 </html>
