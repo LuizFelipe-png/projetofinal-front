@@ -82,21 +82,25 @@ public class AuthController {
     public String mandarRegistro(@ModelAttribute UsuarioDTO user, RedirectAttributes redirectAttributes) {
         try {
             authService.registrar(user);
-
             redirectAttributes.addFlashAttribute("mensagemSucesso", "Cadastro realizado com sucesso! Faça o login");
-            redirectAttributes.addFlashAttribute("verificacaoSenha", "Senha menor que 5 dígitos ou maior que 20!");
             return "redirect:/login";
 
         } catch (HttpStatusCodeException ex) {
-            try {
-                String mensagemErroDoBackend = new ObjectMapper()
-                        .readTree(ex.getResponseBodyAsString())
-                        .get("message").asText();
+            String mensagemErroDoBackend = ex.getResponseBodyAsString();
 
-                redirectAttributes.addFlashAttribute("erroServidor", mensagemErroDoBackend);
-            } catch (Exception e) {
-                redirectAttributes.addFlashAttribute("erroServidor", "Erro ao processar resposta do servidor.");
+            if (mensagemErroDoBackend == null || mensagemErroDoBackend.trim().isEmpty()) {
+                mensagemErroDoBackend = "Erro desconhecido no servidor.";
+            } else if (mensagemErroDoBackend.contains("message")) {
+                try {
+                    mensagemErroDoBackend = new ObjectMapper()
+                            .readTree(mensagemErroDoBackend)
+                            .get("message").asText();
+                } catch (Exception e) {
+                    // Mantém o texto bruto caso falhe o parse do JSON
+                }
             }
+
+            redirectAttributes.addFlashAttribute("erroServidor", mensagemErroDoBackend);
             return "redirect:/cadastrar";
 
         } catch (Exception e) {
@@ -108,8 +112,8 @@ public class AuthController {
     @GetMapping("/entregador")
     public String paginaEntregador(HttpSession session) {
         String token = (String) session.getAttribute("token");
-        if(token == null){
-           return "redirect:/login";
+        if (token == null) {
+            return "redirect:/login";
         }
         return "entregador";
     }
@@ -117,8 +121,8 @@ public class AuthController {
     @GetMapping("/industria")
     public String paginaOperador(Model model, HttpSession session) {
         String token = (String) session.getAttribute("token");
-        if(token == null){
-           return "redirect:/login";
+        if (token == null) {
+            return "redirect:/login";
         }
         model.addAttribute("lotes", operadorService.listarPedidos(token));
         return "industria";
@@ -127,8 +131,8 @@ public class AuthController {
     @GetMapping("/novo-lote")
     public String novoLote(Model model, HttpSession session) {
         String token = (String) session.getAttribute("token");
-        if(token == null){
-           return "redirect:/login";
+        if (token == null) {
+            return "redirect:/login";
         }
         model.addAttribute("operador", new OperadorDTO());
         return "novo_lote";
@@ -137,8 +141,8 @@ public class AuthController {
     @PostMapping("/novo-lote")
     public String cadastrarLote(@ModelAttribute OperadorDTO operador, HttpSession session, RedirectAttributes redirectAttributes) {
         String token = (String) session.getAttribute("token");
-        if(token == null){
-           return "redirect:/login";
+        if (token == null) {
+            return "redirect:/login";
         }
         operadorService.cadastrarLote(token, operador);
         redirectAttributes.addFlashAttribute("mensagemSucesso", "Lote cadastrado com sucesso!");
@@ -176,9 +180,9 @@ public class AuthController {
         redirectAttributes.addFlashAttribute("mensagemSucesso", "Incidente registrado com sucesso!");
         return "redirect:/industria/incidentes";
     }
-    
+
     @GetMapping("/sair")
-    public String sair(HttpSession session){
+    public String sair(HttpSession session) {
         session.invalidate();
         return "redirect:/login";
     }
