@@ -6,6 +6,7 @@ import com.main.front.TCC_front.model.UsuarioDTO;
 import com.main.front.TCC_front.model.UsuarioRequestDTO;
 import com.main.front.TCC_front.model.UsuarioResponseDTO;
 import com.main.front.TCC_front.service.AuthService;
+import com.main.front.TCC_front.service.EntregadorService;
 import com.main.front.TCC_front.service.IncidenteService;
 import com.main.front.TCC_front.service.OperadorService;
 import jakarta.servlet.http.HttpSession;
@@ -15,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import tools.jackson.databind.ObjectMapper;
@@ -30,6 +32,9 @@ public class AuthController {
 
     @Autowired
     private IncidenteService incidenteService;
+
+    @Autowired
+    private EntregadorService entregadorService;
 
     @GetMapping("/login")
     public String login(Model model) {
@@ -110,11 +115,12 @@ public class AuthController {
     }
 
     @GetMapping("/entregador")
-    public String paginaEntregador(HttpSession session) {
+    public String paginaEntregador(Model model, HttpSession session) {
         String token = (String) session.getAttribute("token");
         if (token == null) {
             return "redirect:/login";
         }
+        model.addAttribute("pedidos", entregadorService.listarPedidosPorEntregador(token));
         return "entregador";
     }
 
@@ -185,5 +191,20 @@ public class AuthController {
     public String sair(HttpSession session) {
         session.invalidate();
         return "redirect:/login";
+    }
+
+    @PostMapping("/entregador/confirmar")
+    public String confirmarEntrega(@RequestParam int id_pedido, @RequestParam String token, HttpSession session, RedirectAttributes redirectAttributes) {
+        String tokenSessao = (String) session.getAttribute("token");
+        if (tokenSessao == null) {
+            return "redirect:/login";
+        }
+        try {
+            entregadorService.confirmarEntrega(tokenSessao, id_pedido, token);
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Entrega confirmada com sucesso!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("erroServidor", "Token inválido ou entrega não pôde ser confirmada.");
+        }
+        return "redirect:/entregador";
     }
 }
