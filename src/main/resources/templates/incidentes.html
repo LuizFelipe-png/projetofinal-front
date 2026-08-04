@@ -45,7 +45,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 <label class="form-label">Lote</label>
                                 <select class="form-select" th:field="*{id_pedido}" required>
                                     <option value="">Selecione um lote</option>
-                                    <option th:each="lote : ${lotes}" th:value="${lote.id_pedido}" th:text="${lote.codigo} + ' - ' + ${lote.nome_pedido}"></option>
+                                    <option th:each="lote : ${lotes}" th:value="${lote.id_pedido}" ${lote.nome_pedido}"></option>
                                 </select>
                             </div>
                             <div class="col-md-4">

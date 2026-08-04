@@ -40,7 +40,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     <li class="list-group-item py-3" th:each="pedido : ${pedidos}">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <div>
-                                <strong th:text="${pedido.codigo}"></strong>
                                 <span th:text="${'- ' + pedido.nome_pedido}"></span>
                                 <div class="text-muted small" th:text="${'Cliente: ' + pedido.nome_cliente}"></div>
                             </div>
