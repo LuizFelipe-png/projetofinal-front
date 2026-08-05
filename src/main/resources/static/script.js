@@ -6,7 +6,7 @@ function validarCampos(){
     const senha = document.getElementById("senha");
     const btn = document.getElementById("btn-logar");
     
-    if(email.target.value.lenght > 0 && senha.target.lenght > 0 ""){
+    if(email.target.value.lenght > 0 && senha.target.lenght > 0){
        btn.disabled = false;
     }
 }

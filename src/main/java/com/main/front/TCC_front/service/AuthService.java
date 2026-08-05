@@ -3,6 +3,8 @@ package com.main.front.TCC_front.service;
 import com.main.front.TCC_front.model.UsuarioDTO;
 import com.main.front.TCC_front.model.UsuarioRequestDTO;
 import com.main.front.TCC_front.model.UsuarioResponseDTO;
+import java.util.Arrays;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -33,6 +35,14 @@ public class AuthService {
                 .body(user)
                 .retrieve()
                 .body(String.class);
+    }
+    
+    public List<UsuarioDTO> listarEntregadores(){
+        UsuarioDTO[] array = restClient.get()
+                .uri("/auth/entregador")
+                .retrieve()
+                .body(UsuarioDTO[].class);
+        return Arrays.asList(array);
     }
     
     

@@ -207,4 +207,9 @@ public class AuthController {
         }
         return "redirect:/entregador";
     }
+    
+    @GetMapping("/industria/enviar")
+    public String atribuirEncomendaEntregador(){
+        return "enviar-entregas";
+    }
 }
