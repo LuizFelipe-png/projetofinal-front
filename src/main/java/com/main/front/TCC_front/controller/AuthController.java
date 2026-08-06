@@ -1,5 +1,6 @@
 package com.main.front.TCC_front.controller;
 
+import com.main.front.TCC_front.model.AtribuirEntregadorRequestDTO;
 import com.main.front.TCC_front.model.IncidentesDTO;
 import com.main.front.TCC_front.model.OperadorDTO;
 import com.main.front.TCC_front.model.UsuarioDTO;
@@ -10,6 +11,7 @@ import com.main.front.TCC_front.service.EntregadorService;
 import com.main.front.TCC_front.service.IncidenteService;
 import com.main.front.TCC_front.service.OperadorService;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,13 +28,10 @@ public class AuthController {
 
     @Autowired
     private AuthService authService;
-
     @Autowired
     private OperadorService operadorService;
-
     @Autowired
     private IncidenteService incidenteService;
-
     @Autowired
     private EntregadorService entregadorService;
 
@@ -209,7 +208,15 @@ public class AuthController {
     }
     
     @GetMapping("/industria/enviar")
-    public String atribuirEncomendaEntregador(){
+    public String atribuirEncomendaEntregador(Model model){
+        List<UsuarioDTO> entregadores = entregadorService.listarEntregadores();
+        model.addAttribute("entregadores", entregadores);
         return "enviar-entregas";
+    }
+    
+    @PostMapping("/atribuir")
+    public String atribuirEntregador(@ModelAttribute AtribuirEntregadorRequestDTO entregador) {
+        operadorService.atribuirEntregador(entregador);
+        return "redirect:/industria";
     }
 }

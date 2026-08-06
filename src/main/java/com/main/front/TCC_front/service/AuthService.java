@@ -37,13 +37,7 @@ public class AuthService {
                 .body(String.class);
     }
     
-    public List<UsuarioDTO> listarEntregadores(){
-        UsuarioDTO[] array = restClient.get()
-                .uri("/auth/entregador")
-                .retrieve()
-                .body(UsuarioDTO[].class);
-        return Arrays.asList(array);
-    }
+    
     
     
 }

@@ -4,6 +4,7 @@
  */
 package com.main.front.TCC_front.service;
 
+import com.main.front.TCC_front.model.AtribuirEntregadorRequestDTO;
 import com.main.front.TCC_front.model.OperadorDTO;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
@@ -41,5 +42,13 @@ public class OperadorService {
                 .body(operador)
                 .retrieve()
                 .toBodilessEntity();
+    }
+    
+    public OperadorDTO atribuirEntregador(AtribuirEntregadorRequestDTO entregador){
+        return restClient.put()
+                .uri("/encomenda/atribuir")
+                .body(entregador)
+                .retrieve()
+                .body(OperadorDTO.class);
     }
 }

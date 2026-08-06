@@ -5,6 +5,8 @@
 package com.main.front.TCC_front.service;
 
 import com.main.front.TCC_front.model.EntregadorDTO;
+import com.main.front.TCC_front.model.UsuarioDTO;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import org.springframework.core.ParameterizedTypeReference;
@@ -44,4 +46,11 @@ public class EntregadorService {
             .retrieve()
             .toBodilessEntity();
 }
+    public List<UsuarioDTO> listarEntregadores(){
+        UsuarioDTO[] array = restClient.get()
+                .uri("/auth/listar-entregadores")
+                .retrieve()
+                .body(UsuarioDTO[].class);
+        return Arrays.asList(array);
+    }
 }

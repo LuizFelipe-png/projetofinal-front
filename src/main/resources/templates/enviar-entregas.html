@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -45,16 +45,14 @@
                                     <option value="" disabled selected>Selecione um pedido pendente...</option>
                                     <option th:each="pedido : ${listaPedidos}" 
                                             th:value="${pedido.id_pedido}" 
-                                            th:text="'📦 ' + ${pedido.nome_pedido} + ' (Cliente: ' + ${pedido.nome_cliente} + ')'">
+                                            th:text="' ' + ${pedido.nome_pedido} + ' (Cliente: ' + ${pedido.nome_cliente} + ')'">
                                     </option>
                                 </select>
                             </div>
-
                             <div class="mb-4">
                                 <label for="id_entregador" class="form-label fw-medium">Quem será o entregador?</label>
                                 <select class="form-select" id="id_entregador" name="id_entregador" required>
                                     <option value="" disabled selected>Selecione um motorista...</option>
-                                    <!-- Preenchido pelo Spring -->
                                     <option th:each="entregador : ${entregadores}" 
                                             th:value="${entregador.id}" 
                                             th:text="'🚚 ' + ${entregador.nome}">
