@@ -48,9 +48,9 @@ public class AuthController {
             UsuarioResponseDTO user = authService.logar(credenciais);
             session.setAttribute("token", user.getToken());
 
-            if (user.getRole().equals("Operador Logistico")) {
+            if ("Operador Logistico".equals(user.getRole())) {
                 return "redirect:/industria";
-            } else if (user.getRole().equals("Entregador")) {
+            } else if ("Entregador".equals(user.getRole())) {
                 return "redirect:/entregador";
             } else {
                 redirectAttributes.addFlashAttribute("erro", "Cargo inválido, tente novamente!");
@@ -86,7 +86,7 @@ public class AuthController {
     public String mandarRegistro(@ModelAttribute UsuarioDTO user, RedirectAttributes redirectAttributes) {
         try {
             authService.registrar(user);
-            redirectAttributes.addFlashAttribute("mensagemSucesso", "Cadastro realizado com sucesso! Faça o login");
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Cadastro realizado com sucesso! Faça o login.");
             return "redirect:/login";
 
         } catch (HttpStatusCodeException ex) {
@@ -119,7 +119,14 @@ public class AuthController {
         if (token == null) {
             return "redirect:/login";
         }
-        model.addAttribute("pedidos", entregadorService.listarPedidosPorEntregador(token));
+
+        try {
+                model.addAttribute("pedidos", entregadorService.listarPedidosPorEntregador(token));
+        } catch (Exception e) {
+            model.addAttribute("pedidos", List.of());
+            model.addAttribute("erroServidor", "Não foi possível carregar os pedidos.");
+        }
+
         return "entregador";
     }
 
@@ -129,7 +136,12 @@ public class AuthController {
         if (token == null) {
             return "redirect:/login";
         }
-        model.addAttribute("lotes", operadorService.listarPedidos(token));
+        try {
+            model.addAttribute("lotes", operadorService.listarPedidos(token));
+        } catch (Exception e) {
+            model.addAttribute("lotes", List.of());
+            model.addAttribute("erroServidor", "Erro ao carregar lotes.");
+        }
         return "industria";
     }
 
@@ -149,8 +161,12 @@ public class AuthController {
         if (token == null) {
             return "redirect:/login";
         }
-        operadorService.cadastrarLote(token, operador);
-        redirectAttributes.addFlashAttribute("mensagemSucesso", "Lote cadastrado com sucesso!");
+        try {
+            operadorService.cadastrarLote(token, operador);
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Lote cadastrado com sucesso!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("erroServidor", "Erro ao cadastrar lote.");
+        }
         return "redirect:/industria";
     }
 
@@ -172,8 +188,16 @@ public class AuthController {
     @GetMapping("/industria/incidentes")
     public String telaIncidentes(Model model, HttpSession session) {
         String token = (String) session.getAttribute("token");
-        model.addAttribute("incidentes", incidenteService.listarIncidentes(token));
-        model.addAttribute("lotes", operadorService.listarPedidos(token));
+        if (token == null) {
+            return "redirect:/login";
+        }
+        try {
+            model.addAttribute("incidentes", incidenteService.listarIncidentes(token));
+            model.addAttribute("lotes", operadorService.listarPedidos(token));
+        } catch (Exception e) {
+            model.addAttribute("incidentes", List.of());
+            model.addAttribute("lotes", List.of());
+        }
         model.addAttribute("incidente", new IncidentesDTO());
         return "incidentes";
     }
@@ -181,8 +205,15 @@ public class AuthController {
     @PostMapping("/industria/incidentes")
     public String cadastrarIncidente(@ModelAttribute IncidentesDTO incidente, HttpSession session, RedirectAttributes redirectAttributes) {
         String token = (String) session.getAttribute("token");
-        incidenteService.cadastrarIncidente(token, incidente);
-        redirectAttributes.addFlashAttribute("mensagemSucesso", "Incidente registrado com sucesso!");
+        if (token == null) {
+            return "redirect:/login";
+        }
+        try {
+            incidenteService.cadastrarIncidente(token, incidente);
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Incidente registrado com sucesso!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("erroServidor", "Erro ao registrar incidente.");
+        }
         return "redirect:/industria/incidentes";
     }
 
@@ -206,17 +237,41 @@ public class AuthController {
         }
         return "redirect:/entregador";
     }
-    
+
     @GetMapping("/industria/enviar")
-    public String atribuirEncomendaEntregador(Model model){
-        List<UsuarioDTO> entregadores = entregadorService.listarEntregadores();
-        model.addAttribute("entregadores", entregadores);
+    public String atribuirEncomendaEntregador(Model model, HttpSession session) {
+        String token = (String) session.getAttribute("token");
+        if (token == null) {
+            return "redirect:/login";
+        }
+
+        try {
+            List<UsuarioDTO> entregadores = entregadorService.listarEntregadores(token);
+            model.addAttribute("entregadores", entregadores);
+
+            List<OperadorDTO> listaPedidos = operadorService.listarPedidos(token);
+            model.addAttribute("listaPedidos", listaPedidos);
+        } catch (Exception e) {
+            e.printStackTrace(); // <--- ISSO VAI MOSTRAR O ERRO COMPLETO NO CONSOLE DO SPRING BOOT
+            model.addAttribute("entregadores", List.of());
+            model.addAttribute("listaPedidos", List.of());
+            model.addAttribute("erroServidor", "Erro detalhado: " + e.getMessage()); // <--- MOSTRA O ERRO NA TELA
+        }
         return "enviar-entregas";
     }
-    
-    @PostMapping("/atribuir")
-    public String atribuirEntregador(@ModelAttribute AtribuirEntregadorRequestDTO entregador) {
-        operadorService.atribuirEntregador(entregador);
-        return "redirect:/industria";
+
+    @PostMapping("/industria/vincular")
+    public String atribuirEntregador(@ModelAttribute AtribuirEntregadorRequestDTO entregador, HttpSession session, RedirectAttributes redirectAttributes) {
+        String token = (String) session.getAttribute("token");
+        if (token == null) {
+            return "redirect:/login";
+        }
+        try {
+            operadorService.atribuirEntregador(entregador);
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Entregador atribuído com sucesso!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("erroServidor", "Erro ao atribuir entregador.");
+        }
+        return "redirect:/industria/enviar";
     }
 }

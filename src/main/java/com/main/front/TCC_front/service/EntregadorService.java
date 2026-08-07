@@ -4,9 +4,8 @@
  */
 package com.main.front.TCC_front.service;
 
-import com.main.front.TCC_front.model.EntregadorDTO;
+import com.main.front.TCC_front.model.OperadorDTO;
 import com.main.front.TCC_front.model.UsuarioDTO;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import org.springframework.core.ParameterizedTypeReference;
@@ -20,37 +19,38 @@ import org.springframework.web.client.RestClient;
  */
 @Service
 public class EntregadorService {
-    
+
     private final RestClient restClient;
-    
+
     public EntregadorService() {
         this.restClient = RestClient.builder()
-                .baseUrl("http://localhost:9000")
+                .baseUrl("http://localhost:8080")
                 .build();
     }
-    
-    public List<EntregadorDTO> listarPedidosPorEntregador(String token) {
+
+    public List<OperadorDTO> listarPedidosPorEntregador(String token) {
         return restClient.get()
-                .uri("/entregador/pedidos")
+                .uri("/auth/pedidos") 
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
-                .body(new ParameterizedTypeReference<List<EntregadorDTO>>() {});
+                .body(new ParameterizedTypeReference<List<OperadorDTO>>() {});
     }
-    
-    public void confirmarEntrega(String token, int idPedido, String tokenDigitado) {
-    restClient.post()
-            .uri("/entregador/confirmar")
-            .header("Authorization", "Bearer " + token)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(Map.of("id_pedido", idPedido, "token", tokenDigitado))
-            .retrieve()
-            .toBodilessEntity();
-}
-    public List<UsuarioDTO> listarEntregadores(){
-        UsuarioDTO[] array = restClient.get()
-                .uri("/auth/listar-entregadores")
+
+    public List<UsuarioDTO> listarEntregadores(String token) {
+        return restClient.get()
+                .uri("/auth/listar-entregadores") 
+                .header("Authorization", "Bearer " + token)
                 .retrieve()
-                .body(UsuarioDTO[].class);
-        return Arrays.asList(array);
+                .body(new ParameterizedTypeReference<List<UsuarioDTO>>() {});
+    }
+
+    public void confirmarEntrega(String token, int idPedido, String tokenDigitado) {
+        restClient.post()
+                .uri("/entregador/confirmar") 
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Map.of("id_pedido", idPedido, "token", tokenDigitado))
+                .retrieve()
+                .toBodilessEntity();
     }
 }

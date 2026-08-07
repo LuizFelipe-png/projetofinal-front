@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -8,32 +8,51 @@
 </head>
 <body class="bg-light">
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
         <div class="container-fluid">
             <a class="navbar-brand fw-bold" href="/industria">Painel Indústria</a>
-            <div class="collapse navbar-collapse">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="/industria">Meus Pedidos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="/industria/enviar-tela">Enviar para Entregador</a>
+                        <a class="nav-link active" href="/industria/enviar">Enviar para Entregador</a>
                     </li>
                 </ul>
+                <div class="d-flex">
+                    <a href="/sair" class="btn btn-outline-light btn-sm">Sair</a>
+                </div>
             </div>
         </div>
     </nav>
 
+    <!-- Conteúdo Principal -->
     <div class="container mt-5 mb-5">
-        <h2 class="mb-1">Despachar Encomendas</h2>
+        <h2 class="mb-1 fw-bold">Despachar Encomendas</h2>
         <p class="text-muted mb-4">Atribua os pedidos prontos aos entregadores disponíveis</p>
         <hr class="mb-4">
 
+        <!-- Alertas de Sucesso / Erro -->
+        <div th:if="${mensagemSucesso}" class="alert alert-success alert-dismissible fade show shadow-sm text-center" role="alert">
+            <span th:text="${mensagemSucesso}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div th:if="${erroServidor}" class="alert alert-danger alert-dismissible fade show shadow-sm text-center" role="alert">
+            <span th:text="${erroServidor}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
         <div class="row g-4 justify-content-center">
             <div class="col-lg-6">
-                <div class="card shadow-sm border-0 rounded-3">
-                    <div class="card-header bg-white py-3 text-center">
-                        <h5 class="card-title mb-0 fw-semibold text-dark">Atribuir Carga ao Entregador</h5>
+                <div class="card shadow border-0 rounded-4">
+                    <div class="card-header bg-white py-3 text-center border-0 pt-4">
+                        <h5 class="card-title mb-0 fw-bold text-dark">Atribuir Carga ao Entregador</h5>
                     </div>
                     <div class="card-body p-4">
                         
@@ -44,11 +63,12 @@
                                 <select class="form-select" id="id_pedido" name="id_pedido" required>
                                     <option value="" disabled selected>Selecione um pedido pendente...</option>
                                     <option th:each="pedido : ${listaPedidos}" 
-                                            th:value="${pedido.id_pedido}" 
-                                            th:text="' ' + ${pedido.nome_pedido} + ' (Cliente: ' + ${pedido.nome_cliente} + ')'">
+                                            th:value="${pedido.id_pedido != null ? pedido.id_pedido : pedido.id}" 
+                                            th:text="'📦 ' + ${pedido.nome_pedido != null ? pedido.nome_pedido : 'Pedido'} + ' (Cliente: ' + ${pedido.nome_cliente != null ? pedido.nome_cliente : 'N/A'} + ')'">
                                     </option>
                                 </select>
                             </div>
+
                             <div class="mb-4">
                                 <label for="id_entregador" class="form-label fw-medium">Quem será o entregador?</label>
                                 <select class="form-select" id="id_entregador" name="id_entregador" required>
@@ -60,7 +80,7 @@
                                 </select>
                             </div>
 
-                            <button type="submit" class="btn btn-dark w-100 fw-medium shadow-sm py-2">
+                            <button type="submit" class="btn btn-dark w-100 fw-bold shadow-sm py-2 text-uppercase">
                                 Confirmar Envio
                             </button>
                         </form>
@@ -70,5 +90,7 @@
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
