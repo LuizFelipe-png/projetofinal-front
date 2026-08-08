@@ -8,20 +8,25 @@
 </head>
 <body class="bg-light">
 
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
         <div class="container-fluid">
             <a class="navbar-brand fw-bold" href="/industria">Painel Indústria</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/industria">Meus Pedidos</a>
+                        <a class="nav-link" href="/industria">Lotes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="/industria/enviar">Enviar para Entregador</a>
+                        <a class="nav-link" href="/novo-lote">Novo Lote</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/industria/enviar">Enviar para Entregador</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/industria/incidentes">Incidentes</a>
                     </li>
                 </ul>
                 <div class="d-flex">
@@ -31,13 +36,11 @@
         </div>
     </nav>
 
-    <!-- Conteúdo Principal -->
     <div class="container mt-5 mb-5">
         <h2 class="mb-1 fw-bold">Despachar Encomendas</h2>
         <p class="text-muted mb-4">Atribua os pedidos prontos aos entregadores disponíveis</p>
         <hr class="mb-4">
 
-        <!-- Alertas de Sucesso / Erro -->
         <div th:if="${mensagemSucesso}" class="alert alert-success alert-dismissible fade show shadow-sm text-center" role="alert">
             <span th:text="${mensagemSucesso}"></span>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -55,26 +58,26 @@
                         <h5 class="card-title mb-0 fw-bold text-dark">Atribuir Carga ao Entregador</h5>
                     </div>
                     <div class="card-body p-4">
-                        
+
                         <form th:action="@{/industria/vincular}" method="post">
-                            
+
                             <div class="mb-3">
                                 <label for="id_pedido" class="form-label fw-medium">Qual pedido deseja enviar?</label>
-                                <select class="form-select" id="id_pedido" name="id_pedido" required>
+                                <select class="form-select" id="id_pedido" name="idEncomenda" required>
                                     <option value="" disabled selected>Selecione um pedido pendente...</option>
-                                    <option th:each="pedido : ${listaPedidos}" 
-                                            th:value="${pedido.id_pedido != null ? pedido.id_pedido : pedido.id}" 
-                                            th:text="'📦 ' + ${pedido.nome_pedido != null ? pedido.nome_pedido : 'Pedido'} + ' (Cliente: ' + ${pedido.nome_cliente != null ? pedido.nome_cliente : 'N/A'} + ')'">
+                                    <option th:each="pedido : ${listaPedidos}"
+                                            th:value="${pedido.id_pedido}"
+                                            th:text="'📦 ' + ${pedido.nome_pedido} + ' (Cliente: ' + ${pedido.nome_cliente != null ? pedido.nome_cliente : 'N/A'} + ')'">
                                     </option>
                                 </select>
                             </div>
 
                             <div class="mb-4">
                                 <label for="id_entregador" class="form-label fw-medium">Quem será o entregador?</label>
-                                <select class="form-select" id="id_entregador" name="id_entregador" required>
+                                <select class="form-select" id="id_entregador" name="idEntregador" required>
                                     <option value="" disabled selected>Selecione um motorista...</option>
-                                    <option th:each="entregador : ${entregadores}" 
-                                            th:value="${entregador.id}" 
+                                    <option th:each="entregador : ${entregadores}"
+                                            th:value="${entregador.id_entregador}"
                                             th:text="'🚚 ' + ${entregador.nome}">
                                     </option>
                                 </select>

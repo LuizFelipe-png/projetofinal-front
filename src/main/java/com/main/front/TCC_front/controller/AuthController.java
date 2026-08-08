@@ -1,6 +1,7 @@
 package com.main.front.TCC_front.controller;
 
 import com.main.front.TCC_front.model.AtribuirEntregadorRequestDTO;
+import com.main.front.TCC_front.model.EntregadorDTO;
 import com.main.front.TCC_front.model.IncidentesDTO;
 import com.main.front.TCC_front.model.OperadorDTO;
 import com.main.front.TCC_front.model.UsuarioDTO;
@@ -18,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -121,7 +123,7 @@ public class AuthController {
         }
 
         try {
-                model.addAttribute("pedidos", entregadorService.listarPedidosPorEntregador(token));
+            model.addAttribute("pedidos", entregadorService.listarPedidosPorEntregador(token));
         } catch (Exception e) {
             model.addAttribute("pedidos", List.of());
             model.addAttribute("erroServidor", "Não foi possível carregar os pedidos.");
@@ -251,11 +253,12 @@ public class AuthController {
 
             List<OperadorDTO> listaPedidos = operadorService.listarPedidos(token);
             model.addAttribute("listaPedidos", listaPedidos);
+
         } catch (Exception e) {
-            e.printStackTrace(); // <--- ISSO VAI MOSTRAR O ERRO COMPLETO NO CONSOLE DO SPRING BOOT
+            e.printStackTrace();
             model.addAttribute("entregadores", List.of());
             model.addAttribute("listaPedidos", List.of());
-            model.addAttribute("erroServidor", "Erro detalhado: " + e.getMessage()); // <--- MOSTRA O ERRO NA TELA
+            model.addAttribute("erroServidor", "Erro detalhado: " + e.getMessage());
         }
         return "enviar-entregas";
     }
@@ -267,11 +270,18 @@ public class AuthController {
             return "redirect:/login";
         }
         try {
-            operadorService.atribuirEntregador(entregador);
+            operadorService.atribuirEntregador(token, entregador);
             redirectAttributes.addFlashAttribute("mensagemSucesso", "Entregador atribuído com sucesso!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("erroServidor", "Erro ao atribuir entregador.");
         }
         return "redirect:/industria/enviar";
+    }
+
+    @GetMapping("/listar")
+    public List<EntregadorDTO> listarEntregadores(@RequestHeader("Authorization") String auth) {
+        String token = auth.replace("Bearer ", "");
+        tokenService.extrairClaims(token);
+        return entregadorService.listarEntregadores();
     }
 }

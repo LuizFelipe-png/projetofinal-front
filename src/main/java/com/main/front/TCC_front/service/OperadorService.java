@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 import java.util.List;
+import org.springframework.http.MediaType;
 
 /**
  *
@@ -44,11 +45,13 @@ public class OperadorService {
                 .toBodilessEntity();
     }
     
-    public OperadorDTO atribuirEntregador(AtribuirEntregadorRequestDTO entregador){
-        return restClient.put()
-                .uri("/encomenda/atribuir")
-                .body(entregador)
-                .retrieve()
-                .body(OperadorDTO.class);
-    }
+    public void atribuirEntregador(String token, AtribuirEntregadorRequestDTO entregador) {
+    restClient.put()
+            .uri("/industria/despachar")
+            .header("Authorization", "Bearer " + token)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(entregador)
+            .retrieve()
+            .toBodilessEntity();
+}
 }
