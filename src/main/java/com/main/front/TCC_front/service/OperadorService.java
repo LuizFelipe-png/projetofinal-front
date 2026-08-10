@@ -6,12 +6,13 @@ package com.main.front.TCC_front.service;
 
 import com.main.front.TCC_front.model.AtribuirEntregadorRequestDTO;
 import com.main.front.TCC_front.model.OperadorDTO;
+import java.util.Arrays;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
-
 import java.util.List;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 /**
  *
@@ -28,7 +29,7 @@ public class OperadorService {
                 .build();
     }
 
-    public List<OperadorDTO> listarPedidos(String token) {
+    public List<OperadorDTO> listarPedidos(String token, @RequestHeader("Authorization") String auth) {
     return restClient.get()
             .uri("/industria/listar")
             .header("Authorization", "Bearer " + token)
@@ -53,5 +54,15 @@ public class OperadorService {
             .body(entregador)
             .retrieve()
             .toBodilessEntity();
+}
+    
+    public List<OperadorDTO> listarPedidosPendentes(String token) {
+    OperadorDTO[] array = restClient.get()
+            .uri("/industria/pendentes")
+            .header("Authorization", "Bearer " + token)
+            .retrieve()
+            .body(OperadorDTO[].class);
+
+    return Arrays.asList(array);
 }
 }

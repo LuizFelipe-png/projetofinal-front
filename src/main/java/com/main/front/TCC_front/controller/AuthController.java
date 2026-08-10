@@ -1,7 +1,6 @@
 package com.main.front.TCC_front.controller;
 
 import com.main.front.TCC_front.model.AtribuirEntregadorRequestDTO;
-import com.main.front.TCC_front.model.EntregadorDTO;
 import com.main.front.TCC_front.model.IncidentesDTO;
 import com.main.front.TCC_front.model.OperadorDTO;
 import com.main.front.TCC_front.model.UsuarioDTO;
@@ -16,11 +15,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import tools.jackson.databind.ObjectMapper;
@@ -39,8 +34,7 @@ public class AuthController {
 
     @GetMapping("/login")
     public String login(Model model) {
-        UsuarioRequestDTO credenciais = new UsuarioRequestDTO();
-        model.addAttribute("credenciais", credenciais);
+        model.addAttribute("credenciais", new UsuarioRequestDTO());
         return "login";
     }
 
@@ -49,29 +43,23 @@ public class AuthController {
         try {
             UsuarioResponseDTO user = authService.logar(credenciais);
             session.setAttribute("token", user.getToken());
-
             if ("Operador Logistico".equals(user.getRole())) {
                 return "redirect:/industria";
-            } else if ("Entregador".equals(user.getRole())) {
-                return "redirect:/entregador";
-            } else {
-                redirectAttributes.addFlashAttribute("erro", "Cargo inválido, tente novamente!");
-                return "redirect:/login";
             }
-
+            if ("Entregador".equals(user.getRole())) {
+                return "redirect:/entregador";
+            }
+            redirectAttributes.addFlashAttribute("erro", "Cargo inválido, tente novamente!");
+            return "redirect:/login";
         } catch (Exception e) {
             String mensagemErro = "Não foi possível conectar ao servidor de autenticação.";
-
             if (e instanceof HttpStatusCodeException httpEx) {
                 try {
-                    mensagemErro = new ObjectMapper()
-                            .readTree(httpEx.getResponseBodyAsString())
-                            .get("message").asText();
+                    mensagemErro = new ObjectMapper().readTree(httpEx.getResponseBodyAsString()).get("message").asText();
                 } catch (Exception ex) {
                     mensagemErro = "Email ou senha inválidos.";
                 }
             }
-
             redirectAttributes.addFlashAttribute("erroServidor", mensagemErro);
             return "redirect:/login";
         }
@@ -79,8 +67,7 @@ public class AuthController {
 
     @GetMapping("/cadastrar")
     public String registrar(Model model) {
-        UsuarioDTO newUser = new UsuarioDTO();
-        model.addAttribute("user", newUser);
+        model.addAttribute("user", new UsuarioDTO());
         return "cadastrar";
     }
 
@@ -90,25 +77,13 @@ public class AuthController {
             authService.registrar(user);
             redirectAttributes.addFlashAttribute("mensagemSucesso", "Cadastro realizado com sucesso! Faça o login.");
             return "redirect:/login";
-
         } catch (HttpStatusCodeException ex) {
-            String mensagemErroDoBackend = ex.getResponseBodyAsString();
-
-            if (mensagemErroDoBackend == null || mensagemErroDoBackend.trim().isEmpty()) {
-                mensagemErroDoBackend = "Erro desconhecido no servidor.";
-            } else if (mensagemErroDoBackend.contains("message")) {
-                try {
-                    mensagemErroDoBackend = new ObjectMapper()
-                            .readTree(mensagemErroDoBackend)
-                            .get("message").asText();
-                } catch (Exception e) {
-                    // Mantém o texto bruto caso falhe o parse do JSON
-                }
+            String mensagem = ex.getResponseBodyAsString();
+            if (mensagem == null || mensagem.trim().isEmpty()) {
+                mensagem = "Erro desconhecido no servidor.";
             }
-
-            redirectAttributes.addFlashAttribute("erroServidor", mensagemErroDoBackend);
+            redirectAttributes.addFlashAttribute("erroServidor", mensagem);
             return "redirect:/cadastrar";
-
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("erroServidor", e.getMessage());
             return "redirect:/cadastrar";
@@ -121,25 +96,23 @@ public class AuthController {
         if (token == null) {
             return "redirect:/login";
         }
-
         try {
             model.addAttribute("pedidos", entregadorService.listarPedidosPorEntregador(token));
         } catch (Exception e) {
             model.addAttribute("pedidos", List.of());
             model.addAttribute("erroServidor", "Não foi possível carregar os pedidos.");
         }
-
         return "entregador";
     }
 
     @GetMapping("/industria")
-    public String paginaOperador(Model model, HttpSession session) {
+    public String paginaOperador(Model model, HttpSession session, String auth) {
         String token = (String) session.getAttribute("token");
         if (token == null) {
             return "redirect:/login";
         }
         try {
-            model.addAttribute("lotes", operadorService.listarPedidos(token));
+            model.addAttribute("lotes", operadorService.listarPedidos(token, auth));
         } catch (Exception e) {
             model.addAttribute("lotes", List.of());
             model.addAttribute("erroServidor", "Erro ao carregar lotes.");
@@ -188,14 +161,14 @@ public class AuthController {
     }
 
     @GetMapping("/industria/incidentes")
-    public String telaIncidentes(Model model, HttpSession session) {
+    public String telaIncidentes(Model model, HttpSession session, String auth) {
         String token = (String) session.getAttribute("token");
         if (token == null) {
             return "redirect:/login";
         }
         try {
             model.addAttribute("incidentes", incidenteService.listarIncidentes(token));
-            model.addAttribute("lotes", operadorService.listarPedidos(token));
+            model.addAttribute("lotes", operadorService.listarPedidos(token, auth));
         } catch (Exception e) {
             model.addAttribute("incidentes", List.of());
             model.addAttribute("lotes", List.of());
@@ -241,19 +214,14 @@ public class AuthController {
     }
 
     @GetMapping("/industria/enviar")
-    public String atribuirEncomendaEntregador(Model model, HttpSession session) {
+    public String atribuirEncomendaEntregador(Model model, HttpSession session, String auth) {
         String token = (String) session.getAttribute("token");
         if (token == null) {
             return "redirect:/login";
         }
-
         try {
-            List<UsuarioDTO> entregadores = entregadorService.listarEntregadores(token);
-            model.addAttribute("entregadores", entregadores);
-
-            List<OperadorDTO> listaPedidos = operadorService.listarPedidos(token);
-            model.addAttribute("listaPedidos", listaPedidos);
-
+            model.addAttribute("entregadores", entregadorService.listarEntregadores(token));
+            model.addAttribute("listaPedidos", operadorService.listarPedidosPendentes(token));
         } catch (Exception e) {
             e.printStackTrace();
             model.addAttribute("entregadores", List.of());
@@ -269,19 +237,25 @@ public class AuthController {
         if (token == null) {
             return "redirect:/login";
         }
+        System.out.println("========== FRONT VINCULAR ==========");
+        System.out.println("ID ENCOMENDA: " + entregador.getIdEncomenda());
+        System.out.println("ID ENTREGADOR: " + entregador.getIdEntregador());
         try {
             operadorService.atribuirEntregador(token, entregador);
+            System.out.println(">>> BACKEND RESPONDEU COM SUCESSO");
             redirectAttributes.addFlashAttribute("mensagemSucesso", "Entregador atribuído com sucesso!");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("erroServidor", "Erro ao atribuir entregador.");
+            System.out.println(">>> ERRO AO ATRIBUIR ENTREGADOR");
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("erroServidor", "Erro ao atribuir entregador: " + e.getMessage());
         }
         return "redirect:/industria/enviar";
     }
 
     @GetMapping("/listar")
-    public List<EntregadorDTO> listarEntregadores(@RequestHeader("Authorization") String auth) {
+    @ResponseBody
+    public List<UsuarioDTO> listarEntregadores(@RequestHeader("Authorization") String auth) {
         String token = auth.replace("Bearer ", "");
-        tokenService.extrairClaims(token);
-        return entregadorService.listarEntregadores();
+        return entregadorService.listarEntregadores(token);
     }
 }

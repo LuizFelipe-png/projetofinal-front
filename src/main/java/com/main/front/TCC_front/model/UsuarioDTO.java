@@ -16,12 +16,12 @@ public class UsuarioDTO {
     private String telefone;
     private String senha;
     private String role;
-    private int id_entregador;
+    private Integer id_entregador;
 
     public UsuarioDTO() {
     }
 
-    public UsuarioDTO(Long id, String nome, String email, String telefone, String senha, String role, int id_entregador) {
+    public UsuarioDTO(Long id, String nome, String email, String telefone, String senha, String role, Integer id_entregador) {
         this.id = id;
         this.nome = nome;
         this.email = email;
@@ -79,11 +79,11 @@ public class UsuarioDTO {
         this.role = role;
     }
 
-    public int getId_entregador() {
+    public Integer getId_entregador() {
         return id_entregador;
     }
 
-    public void setId_entregador(int id_entregador) {
+    public void setId_entregador(Integer id_entregador) {
         this.id_entregador = id_entregador;
     }
 

@@ -11,6 +11,7 @@ import org.springframework.web.client.RestClient;
 
 @Service
 public class EntregadorService {
+
     private final RestClient restClient;
 
     public EntregadorService() {
@@ -21,7 +22,7 @@ public class EntregadorService {
 
     public List<OperadorDTO> listarPedidosPorEntregador(String token) {
         return restClient.get()
-                .uri("/entregador/pedidos")
+                .uri("/api/auth/pedidos")
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .body(new ParameterizedTypeReference<List<OperadorDTO>>() {});
@@ -29,7 +30,7 @@ public class EntregadorService {
 
     public List<UsuarioDTO> listarEntregadores(String token) {
         return restClient.get()
-                .uri("/entregador/listar")
+                .uri("/api/auth/listar-entregadores")
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .body(new ParameterizedTypeReference<List<UsuarioDTO>>() {});
@@ -37,10 +38,13 @@ public class EntregadorService {
 
     public void confirmarEntrega(String token, int idPedido, String tokenDigitado) {
         restClient.post()
-                .uri("/entregador/confirmar")
+                .uri("/api/auth/confirmar")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Map.of("id_pedido", idPedido, "token", tokenDigitado))
+                .body(Map.of(
+                    "id_pedido", idPedido,
+                    "token", tokenDigitado
+                ))
                 .retrieve()
                 .toBodilessEntity();
     }

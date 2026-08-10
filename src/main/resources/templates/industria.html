@@ -50,7 +50,7 @@
                                 <th>Produto</th>
                                 <th>Cliente</th>
                                 <th>Status</th>
-                                <th class="text-end">Ações</th>
+                                
                             </tr>
                         </thead>
                         <tbody>
@@ -61,9 +61,6 @@
                                     <span class="badge"
                                           th:classappend="${pedido.status == 'Entregue'} ? 'bg-success' : (${pedido.status == 'Em Rota'} ? 'bg-warning text-dark' : (${pedido.status == 'Avaria na Carga' or pedido.status == 'Incidente de Transporte'} ? 'bg-danger' : 'bg-secondary'))"
                                           th:text="${pedido.status}"></span>
-                                </td>
-                                <td class="text-end">
-                                    <a href="#" class="btn btn-sm btn-outline-secondary">Detalhes</a>
                                 </td>
                             </tr>
                             <tr th:if="${#lists.isEmpty(lotes)}">
