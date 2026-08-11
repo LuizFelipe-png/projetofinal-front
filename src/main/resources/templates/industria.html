@@ -19,9 +19,6 @@
                             <a class="nav-link active" aria-current="page" href="/industria">Lotes</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/novo-lote">Novo Lote</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link" href="/industria/enviar">Enviar para Entregador</a>
                         </li>
                     </ul>
@@ -47,14 +44,13 @@
                                 <th>Produto</th>
                                 <th>Cliente</th>
                                 <th>Status</th>
-                                
                             </tr>
                         </thead>
                         <tbody>
                             <tr th:each="pedido : ${lotes}">
                                 <td th:text="${pedido.nome_pedido}"></td>
                                 <td th:text="${pedido.nome_cliente}"></td>
-                                
+
                             </tr>
                             <tr th:if="${#lists.isEmpty(lotes)}">
                                 <td colspan="4" class="text-center text-muted py-4">Nenhum lote cadastrado ainda</td>

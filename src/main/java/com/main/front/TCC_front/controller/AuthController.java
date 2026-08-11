@@ -163,15 +163,17 @@ public class AuthController {
     @GetMapping("/entregador/incidentes")
     public String telaIncidentes(Model model, HttpSession session) {
         String token = (String) session.getAttribute("token");
+        System.out.println("aqui    ");
         if (token == null) {
             return "redirect:/login";
         }
         try {
+            System.out.println("aqui 2");
             model.addAttribute("incidentes", incidenteService.listarIncidentes(token));
-            model.addAttribute("lotes", operadorService.listarPedidos(token, null));
+            model.addAttribute("pedidos", operadorService.listarPedidos(token, null));
         } catch (Exception e) {
             model.addAttribute("incidentes", List.of());
-            model.addAttribute("lotes", List.of());
+            model.addAttribute("pedidos", List.of());
         }
         model.addAttribute("incidente", new IncidentesDTO());
         return "incidentes";
