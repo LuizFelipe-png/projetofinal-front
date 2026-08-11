@@ -106,13 +106,13 @@ public class AuthController {
     }
 
     @GetMapping("/industria")
-    public String paginaOperador(Model model, HttpSession session, String auth) {
+    public String paginaOperador(Model model, HttpSession session) {
         String token = (String) session.getAttribute("token");
         if (token == null) {
             return "redirect:/login";
         }
         try {
-            model.addAttribute("lotes", operadorService.listarPedidos(token, auth));
+            model.addAttribute("lotes", operadorService.listarPedidos(token, null));
         } catch (Exception e) {
             model.addAttribute("lotes", List.of());
             model.addAttribute("erroServidor", "Erro ao carregar lotes.");
@@ -160,15 +160,15 @@ public class AuthController {
         return "notificacoes";
     }
 
-    @GetMapping("/industria/incidentes")
-    public String telaIncidentes(Model model, HttpSession session, String auth) {
+    @GetMapping("/entregador/incidentes")
+    public String telaIncidentes(Model model, HttpSession session) {
         String token = (String) session.getAttribute("token");
         if (token == null) {
             return "redirect:/login";
         }
         try {
             model.addAttribute("incidentes", incidenteService.listarIncidentes(token));
-            model.addAttribute("lotes", operadorService.listarPedidos(token, auth));
+            model.addAttribute("lotes", operadorService.listarPedidos(token, null));
         } catch (Exception e) {
             model.addAttribute("incidentes", List.of());
             model.addAttribute("lotes", List.of());
@@ -177,7 +177,7 @@ public class AuthController {
         return "incidentes";
     }
 
-    @PostMapping("/industria/incidentes")
+    @PostMapping("/entregador/incidentes")
     public String cadastrarIncidente(@ModelAttribute IncidentesDTO incidente, HttpSession session, RedirectAttributes redirectAttributes) {
         String token = (String) session.getAttribute("token");
         if (token == null) {
@@ -189,7 +189,7 @@ public class AuthController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("erroServidor", "Erro ao registrar incidente.");
         }
-        return "redirect:/industria/incidentes";
+        return "redirect:/entregador/incidentes";
     }
 
     @GetMapping("/sair")
@@ -214,7 +214,7 @@ public class AuthController {
     }
 
     @GetMapping("/industria/enviar")
-    public String atribuirEncomendaEntregador(Model model, HttpSession session, String auth) {
+    public String atribuirEncomendaEntregador(Model model, HttpSession session) {
         String token = (String) session.getAttribute("token");
         if (token == null) {
             return "redirect:/login";
@@ -237,16 +237,10 @@ public class AuthController {
         if (token == null) {
             return "redirect:/login";
         }
-        System.out.println("========== FRONT VINCULAR ==========");
-        System.out.println("ID ENCOMENDA: " + entregador.getIdEncomenda());
-        System.out.println("ID ENTREGADOR: " + entregador.getIdEntregador());
         try {
             operadorService.atribuirEntregador(token, entregador);
-            System.out.println(">>> BACKEND RESPONDEU COM SUCESSO");
             redirectAttributes.addFlashAttribute("mensagemSucesso", "Entregador atribuído com sucesso!");
         } catch (Exception e) {
-            System.out.println(">>> ERRO AO ATRIBUIR ENTREGADOR");
-            e.printStackTrace();
             redirectAttributes.addFlashAttribute("erroServidor", "Erro ao atribuir entregador: " + e.getMessage());
         }
         return "redirect:/industria/enviar";
@@ -257,5 +251,20 @@ public class AuthController {
     public List<UsuarioDTO> listarEntregadores(@RequestHeader("Authorization") String auth) {
         String token = auth.replace("Bearer ", "");
         return entregadorService.listarEntregadores(token);
+    }
+
+    @PostMapping("/entregador/atualizar-status")
+    public String atualizarStatusEntrega(@RequestParam int id_pedido, @RequestParam String status, HttpSession session, RedirectAttributes redirectAttributes) {
+        String token = (String) session.getAttribute("token");
+        if (token == null) {
+            return "redirect:/login";
+        }
+        try {
+            operadorService.atualizarStatus(token, id_pedido, status);
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Status atualizado com sucesso!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("erroServidor", "Erro ao atualizar status.");
+        }
+        return "redirect:/entregador";
     }
 }

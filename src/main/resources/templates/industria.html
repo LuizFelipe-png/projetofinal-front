@@ -24,9 +24,6 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/industria/enviar">Enviar para Entregador</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/industria/incidentes">Incidentes</a>
-                        </li>
                     </ul>
                     <div class="d-flex">
                         <a href="/sair" class="btn btn-outline-light btn-sm">Sair</a>
@@ -57,11 +54,7 @@
                             <tr th:each="pedido : ${lotes}">
                                 <td th:text="${pedido.nome_pedido}"></td>
                                 <td th:text="${pedido.nome_cliente}"></td>
-                                <td>
-                                    <span class="badge"
-                                          th:classappend="${pedido.status == 'Entregue'} ? 'bg-success' : (${pedido.status == 'Em Rota'} ? 'bg-warning text-dark' : (${pedido.status == 'Avaria na Carga' or pedido.status == 'Incidente de Transporte'} ? 'bg-danger' : 'bg-secondary'))"
-                                          th:text="${pedido.status}"></span>
-                                </td>
+                                
                             </tr>
                             <tr th:if="${#lists.isEmpty(lotes)}">
                                 <td colspan="4" class="text-center text-muted py-4">Nenhum lote cadastrado ainda</td>

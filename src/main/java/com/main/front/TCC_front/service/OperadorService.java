@@ -48,7 +48,7 @@ public class OperadorService {
     
     public void atribuirEntregador(String token, AtribuirEntregadorRequestDTO entregador) {
     restClient.put()
-            .uri("/industria/despachar")
+            .uri("/industria/atribuir/entregador")
             .header("Authorization", "Bearer " + token)
             .contentType(MediaType.APPLICATION_JSON)
             .body(entregador)
@@ -64,5 +64,17 @@ public class OperadorService {
             .body(OperadorDTO[].class);
 
     return Arrays.asList(array);
+}
+    
+    public void atualizarStatus(String token, int idPedido, String status) {
+        OperadorDTO dto = new OperadorDTO();
+        dto.setId_pedido(idPedido);
+        dto.setStatus(status);
+        restClient.post()
+                .uri("/industria/atualizar-status")
+                .header("Authorization", "Bearer " + token)
+                .body(dto)
+                .retrieve()
+                .toBodilessEntity();
 }
 }
