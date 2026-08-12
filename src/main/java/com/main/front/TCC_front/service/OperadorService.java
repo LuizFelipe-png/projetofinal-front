@@ -11,6 +11,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import java.util.List;
+import java.util.Map;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestHeader;
 
@@ -30,12 +31,13 @@ public class OperadorService {
     }
 
     public List<OperadorDTO> listarPedidos(String token, @RequestHeader("Authorization") String auth) {
-    return restClient.get()
-            .uri("/industria/listar")
-            .header("Authorization", "Bearer " + token)
-            .retrieve()
-            .body(new ParameterizedTypeReference<List<OperadorDTO>>() {});
-}
+        return restClient.get()
+                .uri("/industria/listar")
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .body(new ParameterizedTypeReference<List<OperadorDTO>>() {
+                });
+    }
 
     public void cadastrarLote(String token, OperadorDTO operador) {
         restClient.post()
@@ -45,27 +47,27 @@ public class OperadorService {
                 .retrieve()
                 .toBodilessEntity();
     }
-    
-    public void atribuirEntregador(String token, AtribuirEntregadorRequestDTO entregador) {
-    restClient.put()
-            .uri("/industria/atribuir/entregador")
-            .header("Authorization", "Bearer " + token)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(entregador)
-            .retrieve()
-            .toBodilessEntity();
-}
-    
-    public List<OperadorDTO> listarPedidosPendentes(String token) {
-    OperadorDTO[] array = restClient.get()
-            .uri("/industria/pendentes")
-            .header("Authorization", "Bearer " + token)
-            .retrieve()
-            .body(OperadorDTO[].class);
 
-    return Arrays.asList(array);
-}
-    
+    public void atribuirEntregador(String token, AtribuirEntregadorRequestDTO entregador) {
+        restClient.put()
+                .uri("/industria/atribuir/entregador")
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(entregador)
+                .retrieve()
+                .toBodilessEntity();
+    }
+
+    public List<OperadorDTO> listarPedidosPendentes(String token) {
+        OperadorDTO[] array = restClient.get()
+                .uri("/industria/pendentes")
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .body(OperadorDTO[].class);
+
+        return Arrays.asList(array);
+    }
+
     public void atualizarStatus(String token, int idPedido, String status) {
         OperadorDTO dto = new OperadorDTO();
         dto.setId_pedido(idPedido);
@@ -76,7 +78,8 @@ public class OperadorService {
                 .body(dto)
                 .retrieve()
                 .toBodilessEntity();
-}
+    }
+
     public void baterPonto(String token, int idPedido, String localizacao) {
         OperadorDTO dto = new OperadorDTO();
         dto.setId_pedido(idPedido);
@@ -87,5 +90,25 @@ public class OperadorService {
                 .body(dto)
                 .retrieve()
                 .toBodilessEntity();
+    }
+
+    public OperadorDTO buscarPorCodigo(String codigo) {
+        return restClient.get()
+                .uri("/industria/rastrear/" + codigo)
+                .retrieve()
+                .body(OperadorDTO.class);
+    }
+    
+    public void atualizarStatus(String token, int idPedido, String status, String localizacao) {
+    restClient.post()
+            .uri("/industria/status/atualizar")
+            .header("Authorization", "Bearer " + token)
+            .body(Map.of(
+                "id_pedido", idPedido,
+                "status", status != null ? status : "",
+                "localizacao", localizacao != null ? localizacao : ""
+            ))
+            .retrieve()
+            .toBodilessEntity();
 }
 }

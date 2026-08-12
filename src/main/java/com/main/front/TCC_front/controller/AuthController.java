@@ -151,24 +151,41 @@ public class AuthController {
     }
 
     @GetMapping("/rastreamento")
-    public String telaRastreamento() {
+    public String telaRastreamento(@RequestParam(required = false) String codigoLote, Model model) {
+        if (codigoLote != null && !codigoLote.isBlank()) {
+            try {
+                OperadorDTO pedido = operadorService.buscarPorCodigo(codigoLote);
+                if (pedido != null) {
+                    model.addAttribute("pedido", pedido);
+                    model.addAttribute("historico", entregadorService.listarHistoricoPublico(pedido.getId_pedido()));
+                    model.addAttribute("codigoLote", codigoLote);
+                } else {
+                    model.addAttribute("erro", "Nenhum lote encontrado com esse código.");
+                }
+            } catch (Exception e) {
+                model.addAttribute("erro", "Nenhum lote encontrado com esse código.");
+            }
+        }
         return "rastreamento";
     }
 
     @GetMapping("/notificacoes")
-    public String telaNotificacoes() {
+    public String telaNotificacoes(Model model) {
+        try {
+            model.addAttribute("notificacoes", entregadorService.listarHistoricoGeral());
+        } catch (Exception e) {
+            model.addAttribute("notificacoes", List.of());
+        }
         return "notificacoes";
     }
 
     @GetMapping("/entregador/incidentes")
     public String telaIncidentes(Model model, HttpSession session) {
         String token = (String) session.getAttribute("token");
-        System.out.println("aqui    ");
         if (token == null) {
             return "redirect:/login";
         }
         try {
-            System.out.println("aqui 2");
             model.addAttribute("incidentes", incidenteService.listarIncidentes(token));
             model.addAttribute("pedidos", operadorService.listarPedidos(token, null));
         } catch (Exception e) {
@@ -215,6 +232,21 @@ public class AuthController {
         return "redirect:/entregador";
     }
 
+    @PostMapping("/entregador/checkpoint")
+    public String registrarCheckpoint(@RequestParam int id_pedido, @RequestParam String descricao, HttpSession session, RedirectAttributes redirectAttributes) {
+        String token = (String) session.getAttribute("token");
+        if (token == null) {
+            return "redirect:/login";
+        }
+        try {
+            entregadorService.registrarCheckpoint(token, id_pedido, descricao);
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Ponto registrado com sucesso!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("erroServidor", "Erro ao registrar checkpoint.");
+        }
+        return "redirect:/entregador";
+    }
+
     @GetMapping("/industria/enviar")
     public String atribuirEncomendaEntregador(Model model, HttpSession session) {
         String token = (String) session.getAttribute("token");
@@ -256,31 +288,19 @@ public class AuthController {
     }
 
     @PostMapping("/entregador/atualizar-status")
-    public String atualizarStatusEntrega(@RequestParam int id_pedido, @RequestParam String status, HttpSession session, RedirectAttributes redirectAttributes) {
+    public String atualizarStatusEntrega(@RequestParam int id_pedido, @RequestParam(required = false) String status,
+                                          @RequestParam(required = false) String localizacao,
+                                          HttpSession session, RedirectAttributes redirectAttributes) {
         String token = (String) session.getAttribute("token");
         if (token == null) {
             return "redirect:/login";
         }
         try {
-            operadorService.atualizarStatus(token, id_pedido, status);
-            redirectAttributes.addFlashAttribute("mensagemSucesso", "Status atualizado com sucesso!");
+            operadorService.atualizarStatus(token, id_pedido, status, localizacao);
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Atualizado com sucesso!");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("erroServidor", "Erro ao atualizar status.");
-        }
-        return "redirect:/entregador";
-    }
-
-    @PostMapping("/entregador/bater-ponto")
-    public String baterPonto(@RequestParam int id_pedido, @RequestParam String localizacao, HttpSession session, RedirectAttributes redirectAttributes) {
-        String token = (String) session.getAttribute("token");
-        if (token == null) {
-            return "redirect:/login";
-        }
-        try {
-            operadorService.baterPonto(token, id_pedido, localizacao);
-            redirectAttributes.addFlashAttribute("mensagemSucesso", "Localização atualizada com sucesso!");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("erroServidor", "Erro ao atualizar localização.");
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("erroServidor", "Erro ao atualizar: " + e.getMessage());
         }
         return "redirect:/entregador";
     }
