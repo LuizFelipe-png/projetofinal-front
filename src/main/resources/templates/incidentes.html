@@ -74,7 +74,6 @@
                 </div>
             </div>
 
-            <!-- Tabela de Incidentes -->
             <div class="card shadow-sm">
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
@@ -84,6 +83,7 @@
                                 <th>Tipo</th>
                                 <th>Descrição</th>
                                 <th>Data e Horário</th>
+                                <th>Nome do Entregador</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -92,16 +92,16 @@
                                 <td th:text="${incidente.descricao}"></td>
                                 <td th:text="${incidente.acao_tomada}"></td>
                                 <td th:text="${#temporals.format(incidente.data_ocorrencia, 'dd/MM/yyyy HH:mm')}"></td>
+                                <td th:text="${incidente.nome_entregador}"></td>
                             </tr>
                             <tr th:if="${#lists.isEmpty(incidentes)}">
-                                <td colspan="4" class="text-center text-muted py-4">Nenhum incidente registrado ainda</td>
+                                <td colspan="5" class="text-center text-muted py-4">Nenhum incidente registrado ainda</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

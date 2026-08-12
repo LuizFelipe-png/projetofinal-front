@@ -21,11 +21,12 @@ public class OperadorDTO {
     private String email_cliente;
     private Long id_entregador;
     private String token;
+    private String localizacao_atual;
 
     public OperadorDTO() {
     }
 
-    public OperadorDTO(int id_pedido, String nome_pedido, float peso, int quantidade, String status, String codigo, int id_cliente, String nome_cliente, String email_cliente, Long id_entregador, String token) {
+    public OperadorDTO(int id_pedido, String nome_pedido, float peso, int quantidade, String status, String codigo, int id_cliente, String nome_cliente, String email_cliente, Long id_entregador, String token, String localizacao_atual) {
         this.id_pedido = id_pedido;
         this.nome_pedido = nome_pedido;
         this.peso = peso;
@@ -37,6 +38,7 @@ public class OperadorDTO {
         this.email_cliente = email_cliente;
         this.id_entregador = id_entregador;
         this.token = token;
+        this.localizacao_atual = localizacao_atual;
     }
 
     public int getId_pedido() {
@@ -126,4 +128,15 @@ public class OperadorDTO {
     public void setToken(String token) {
         this.token = token;
     }
+
+    public String getLocalizacao_atual() {
+        return localizacao_atual;
+    }
+
+    public void setLocalizacao_atual(String localizacao_atual) {
+        this.localizacao_atual = localizacao_atual;
+    }
+
+    
+    
 }

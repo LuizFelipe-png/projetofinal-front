@@ -269,4 +269,19 @@ public class AuthController {
         }
         return "redirect:/entregador";
     }
+
+    @PostMapping("/entregador/bater-ponto")
+    public String baterPonto(@RequestParam int id_pedido, @RequestParam String localizacao, HttpSession session, RedirectAttributes redirectAttributes) {
+        String token = (String) session.getAttribute("token");
+        if (token == null) {
+            return "redirect:/login";
+        }
+        try {
+            operadorService.baterPonto(token, id_pedido, localizacao);
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Localização atualizada com sucesso!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("erroServidor", "Erro ao atualizar localização.");
+        }
+        return "redirect:/entregador";
+    }
 }

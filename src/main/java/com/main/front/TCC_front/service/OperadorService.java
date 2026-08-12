@@ -77,4 +77,15 @@ public class OperadorService {
                 .retrieve()
                 .toBodilessEntity();
 }
+    public void baterPonto(String token, int idPedido, String localizacao) {
+        OperadorDTO dto = new OperadorDTO();
+        dto.setId_pedido(idPedido);
+        dto.setLocalizacao_atual(localizacao);
+        restClient.post()
+                .uri("/industria/bater-ponto")
+                .header("Authorization", "Bearer " + token)
+                .body(dto)
+                .retrieve()
+                .toBodilessEntity();
+}
 }

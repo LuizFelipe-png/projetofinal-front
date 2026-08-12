@@ -21,75 +21,85 @@
         private String acao_tomada;
         private LocalDateTime data_ocorrencia;
         private String codigo_pedido;
+        private String nome_entregador;
 
         public IncidentesDTO() {
         }
 
-        public IncidentesDTO(int id_incidente, Integer id_pedido, String tipo, String descricao, String acao_tomada, LocalDateTime data_ocorrencia, String codigo_pedido) {
-            this.id_incidente = id_incidente;
-            this.id_pedido = id_pedido;
-            this.tipo = tipo;
-            this.descricao = descricao;
-            this.acao_tomada = acao_tomada;
-            this.data_ocorrencia = data_ocorrencia;
-            this.codigo_pedido = codigo_pedido;
-        }
+    public IncidentesDTO(int id_incidente, Integer id_pedido, String tipo, String descricao, String acao_tomada, LocalDateTime data_ocorrencia, String codigo_pedido, String nome_entregador) {
+        this.id_incidente = id_incidente;
+        this.id_pedido = id_pedido;
+        this.tipo = tipo;
+        this.descricao = descricao;
+        this.acao_tomada = acao_tomada;
+        this.data_ocorrencia = data_ocorrencia;
+        this.codigo_pedido = codigo_pedido;
+        this.nome_entregador = nome_entregador;
+    }
 
-        public int getId_incidente() {
-            return id_incidente;
-        }
+    public int getId_incidente() {
+        return id_incidente;
+    }
 
-        public void setId_incidente(int id_incidente) {
-            this.id_incidente = id_incidente;
-        }
+    public void setId_incidente(int id_incidente) {
+        this.id_incidente = id_incidente;
+    }
 
-        public Integer getId_pedido() {
-            return id_pedido;
-        }
+    public Integer getId_pedido() {
+        return id_pedido;
+    }
 
-        public void setId_pedido(Integer id_pedido) {
-            this.id_pedido = id_pedido;
-        }
+    public void setId_pedido(Integer id_pedido) {
+        this.id_pedido = id_pedido;
+    }
 
-        public String getTipo() {
-            return tipo;
-        }
+    public String getTipo() {
+        return tipo;
+    }
 
-        public void setTipo(String tipo) {
-            this.tipo = tipo;
-        }
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
 
-        public String getDescricao() {
-            return descricao;
-        }
+    public String getDescricao() {
+        return descricao;
+    }
 
-        public void setDescricao(String descricao) {
-            this.descricao = descricao;
-        }
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
 
-        public String getAcao_tomada() {
-            return acao_tomada;
-        }
+    public String getAcao_tomada() {
+        return acao_tomada;
+    }
 
-        public void setAcao_tomada(String acao_tomada) {
-            this.acao_tomada = acao_tomada;
-        }
+    public void setAcao_tomada(String acao_tomada) {
+        this.acao_tomada = acao_tomada;
+    }
 
-        public LocalDateTime getData_ocorrencia() {
-            return data_ocorrencia;
-        }
+    public LocalDateTime getData_ocorrencia() {
+        return data_ocorrencia;
+    }
 
-        public void setData_ocorrencia(LocalDateTime data_ocorrencia) {
-            this.data_ocorrencia = data_ocorrencia;
-        }
+    public void setData_ocorrencia(LocalDateTime data_ocorrencia) {
+        this.data_ocorrencia = data_ocorrencia;
+    }
 
-        public String getCodigo_pedido() {
-            return codigo_pedido;
-        }
+    public String getCodigo_pedido() {
+        return codigo_pedido;
+    }
 
-        public void setCodigo_pedido(String codigo_pedido) {
-            this.codigo_pedido = codigo_pedido;
-        }
+    public void setCodigo_pedido(String codigo_pedido) {
+        this.codigo_pedido = codigo_pedido;
+    }
 
+    public String getNome_entregador() {
+        return nome_entregador;
+    }
 
+    public void setNome_entregador(String nome_entregador) {
+        this.nome_entregador = nome_entregador;
+    }
+
+        
     }
