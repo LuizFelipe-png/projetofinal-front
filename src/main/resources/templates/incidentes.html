@@ -23,6 +23,7 @@
                             <a class="nav-link active" aria-current="page" href="/entregador/incidentes">Incidentes</a>
                         </li>
                     </ul>
+                    <span class="navbar-text text-light me-3" th:text="${'Olá, ' + nomeUsuario}">Olá, Usuário</span>
                     <div class="d-flex">
                         <a href="/sair" class="btn btn-outline-light btn-sm">Sair</a>
                     </div>
@@ -79,9 +80,9 @@
                     <table class="table table-hover align-middle mb-0">
                         <thead>
                             <tr>
-                                <th>Lote</th>
                                 <th>Tipo</th>
                                 <th>Descrição</th>
+                                <th>Ação Tomada</th>
                                 <th>Data e Horário</th>
                                 <th>Nome do Entregador</th>
                             </tr>

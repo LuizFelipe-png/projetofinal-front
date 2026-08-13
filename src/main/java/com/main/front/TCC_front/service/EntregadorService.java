@@ -77,4 +77,16 @@ public class EntregadorService {
                 .body(new ParameterizedTypeReference<List<HistoricoDTO>>() {
                 });
     }
+
+    public void atualizarStatus(String token, int idPedido, String status) {
+        restClient.post()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/industria/status/atualizar")
+                        .queryParam("id_pedido", idPedido)
+                        .queryParam("status", status)
+                        .build())
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toBodilessEntity();
+    }
 }

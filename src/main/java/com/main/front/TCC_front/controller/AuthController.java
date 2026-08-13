@@ -43,6 +43,7 @@ public class AuthController {
         try {
             UsuarioResponseDTO user = authService.logar(credenciais);
             session.setAttribute("token", user.getToken());
+            session.setAttribute("nome", user.getNome());
             if ("Operador Logistico".equals(user.getRole())) {
                 return "redirect:/industria";
             }
@@ -96,6 +97,7 @@ public class AuthController {
         if (token == null) {
             return "redirect:/login";
         }
+        model.addAttribute("nomeUsuario", session.getAttribute("nome"));
         try {
             model.addAttribute("pedidos", entregadorService.listarPedidosPorEntregador(token));
         } catch (Exception e) {
@@ -111,6 +113,7 @@ public class AuthController {
         if (token == null) {
             return "redirect:/login";
         }
+        model.addAttribute("nomeUsuario", session.getAttribute("nome"));
         try {
             model.addAttribute("lotes", operadorService.listarPedidos(token, null));
         } catch (Exception e) {
@@ -126,6 +129,7 @@ public class AuthController {
         if (token == null) {
             return "redirect:/login";
         }
+        model.addAttribute("nomeUsuario", session.getAttribute("nome"));
         model.addAttribute("operador", new OperadorDTO());
         return "novo_lote";
     }
@@ -185,6 +189,7 @@ public class AuthController {
         if (token == null) {
             return "redirect:/login";
         }
+        model.addAttribute("nomeUsuario", session.getAttribute("nome"));
         try {
             model.addAttribute("incidentes", incidenteService.listarIncidentes(token));
             model.addAttribute("pedidos", operadorService.listarPedidos(token, null));
@@ -224,10 +229,21 @@ public class AuthController {
             return "redirect:/login";
         }
         try {
-            entregadorService.confirmarEntrega(tokenSessao, id_pedido, token);
+            entregadorService.confirmarEntrega(tokenSessao, id_pedido, token.trim());
             redirectAttributes.addFlashAttribute("mensagemSucesso", "Entrega confirmada com sucesso!");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("erroServidor", "Token inválido ou entrega não pôde ser confirmada.");
+            e.printStackTrace();
+
+            String mensagemErro = "Erro ao confirmar entrega: " + e.getMessage();
+
+            if (e instanceof HttpStatusCodeException httpEx) {
+                try {
+                    mensagemErro = new ObjectMapper().readTree(httpEx.getResponseBodyAsString()).get("message").asText();
+                } catch (Exception ex) {
+                    mensagemErro = "Resposta da API: " + httpEx.getResponseBodyAsString();
+                }
+            }
+            redirectAttributes.addFlashAttribute("erroServidor", mensagemErro);
         }
         return "redirect:/entregador";
     }
@@ -253,6 +269,7 @@ public class AuthController {
         if (token == null) {
             return "redirect:/login";
         }
+        model.addAttribute("nomeUsuario", session.getAttribute("nome"));
         try {
             model.addAttribute("entregadores", entregadorService.listarEntregadores(token));
             model.addAttribute("listaPedidos", operadorService.listarPedidosPendentes(token));
@@ -288,20 +305,31 @@ public class AuthController {
     }
 
     @PostMapping("/entregador/atualizar-status")
-    public String atualizarStatusEntrega(@RequestParam int id_pedido, @RequestParam(required = false) String status,
-                                          @RequestParam(required = false) String localizacao,
-                                          HttpSession session, RedirectAttributes redirectAttributes) {
+    public String atualizarStatusEntrega(@RequestParam int id_pedido, @RequestParam String status,
+            HttpSession session, RedirectAttributes redirectAttributes) {
         String token = (String) session.getAttribute("token");
         if (token == null) {
             return "redirect:/login";
         }
+
         try {
-            operadorService.atualizarStatus(token, id_pedido, status, localizacao);
-            redirectAttributes.addFlashAttribute("mensagemSucesso", "Atualizado com sucesso!");
+            entregadorService.atualizarStatus(token, id_pedido, status);
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Status atualizado com sucesso para: " + status);
+
         } catch (Exception e) {
             e.printStackTrace();
-            redirectAttributes.addFlashAttribute("erroServidor", "Erro ao atualizar: " + e.getMessage());
+
+            String mensagemErro = "Erro ao atualizar status: " + e.getMessage();
+            if (e instanceof HttpStatusCodeException httpEx) {
+                try {
+                    mensagemErro = new ObjectMapper().readTree(httpEx.getResponseBodyAsString()).get("message").asText();
+                } catch (Exception ex) {
+                    mensagemErro = "Resposta da API: " + httpEx.getResponseBodyAsString();
+                }
+            }
+            redirectAttributes.addFlashAttribute("erroServidor", mensagemErro);
         }
+
         return "redirect:/entregador";
     }
 }
